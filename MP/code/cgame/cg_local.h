@@ -1648,6 +1648,8 @@ extern vmCvar_t cg_gun_x;
 extern vmCvar_t cg_gun_y;
 extern vmCvar_t cg_gun_z;
 extern vmCvar_t cg_drawGun;
+extern vmCvar_t cg_bloodFlash;
+extern vmCvar_t cg_muzzleFlash;
 extern vmCvar_t cg_drawFPGun;
 extern vmCvar_t cg_drawGamemodels;
 extern vmCvar_t cg_cursorHints;

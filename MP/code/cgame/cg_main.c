@@ -151,6 +151,8 @@ vmCvar_t cg_brassTime;
 vmCvar_t cg_viewsize;
 vmCvar_t cg_letterbox;
 vmCvar_t cg_drawGun;
+vmCvar_t cg_bloodFlash;
+vmCvar_t cg_muzzleFlash;
 vmCvar_t cg_drawFPGun;
 vmCvar_t cg_drawGamemodels;
 vmCvar_t cg_cursorHints;    //----(SA)	added
@@ -294,6 +296,8 @@ cvarTable_t cvarTable[] = {
 	{ &cg_ignore, "cg_ignore", "0", 0 },  // used for debugging
 	{ &cg_autoswitch, "cg_autoswitch", "2", CVAR_ARCHIVE },
 	{ &cg_drawGun, "cg_drawGun", "1", CVAR_ARCHIVE },
+	{ &cg_bloodFlash, "cg_bloodFlash", "1", CVAR_ARCHIVE },
+	{ &cg_muzzleFlash, "cg_muzzleFlash", "1", CVAR_ARCHIVE },
 	{ &cg_drawGamemodels, "cg_drawGamemodels", "1", CVAR_CHEAT },
 	{ &cg_drawFPGun, "cg_drawFPGun", "1", CVAR_ARCHIVE },
 	{ &cg_gun_frame, "cg_gun_frame", "0", CVAR_TEMP },

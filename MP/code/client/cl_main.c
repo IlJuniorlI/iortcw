@@ -4103,6 +4103,8 @@ void CL_Init( void ) {
 	Cvar_Get( "cg_drawTeamOverlay", "2", CVAR_ARCHIVE );
 	Cvar_Get( "cg_uselessNostalgia", "0", CVAR_ARCHIVE ); // JPW NERVE
 	Cvar_Get( "cg_drawGun", "1", CVAR_ARCHIVE );
+	Cvar_Get( "cg_bloodFlash", "1", CVAR_ARCHIVE );
+	Cvar_Get( "cg_muzzleFlash", "1", CVAR_ARCHIVE );
 	Cvar_Get( "cg_cursorHints", "1", CVAR_ARCHIVE );
 	Cvar_Get( "cg_voiceSpriteTime", "6000", CVAR_ARCHIVE );
 	Cvar_Get( "cg_teamChatsOnly", "0", CVAR_ARCHIVE );

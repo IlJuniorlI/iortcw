@@ -3018,18 +3018,22 @@ static void CG_DrawFlashFire( void ) {
 		if ( alpha > max ) {
 			alpha = max;
 		}
-		col[0] = alpha;
-		col[1] = alpha;
-		col[2] = alpha;
-		col[3] = alpha;
-		trap_R_SetColor( col );
-		if ( cg_fixedAspect.integer ) {
-			CG_SetScreenPlacement(PLACE_STRETCH, PLACE_STRETCH);
-			CG_DrawPic( -10, -10, 650, 490, cgs.media.viewFlashFire[( cg.time / 50 ) % 16] );
-			CG_SetScreenPlacement(PLACE_CENTER, PLACE_CENTER);
-		} else {
-			CG_DrawPic( -10, -10, 650, 490, cgs.media.viewFlashFire[( cg.time / 50 ) % 16] );
+
+		if ( cg_muzzleFlash.integer == 1 ) {
+			col[0] = alpha;
+			col[1] = alpha;
+			col[2] = alpha;
+			col[3] = alpha;
+			trap_R_SetColor( col );
+			if ( cg_fixedAspect.integer ) {
+				CG_SetScreenPlacement(PLACE_STRETCH, PLACE_STRETCH);
+				CG_DrawPic( -10, -10, 650, 490, cgs.media.viewFlashFire[( cg.time / 50 ) % 16] );
+				CG_SetScreenPlacement(PLACE_CENTER, PLACE_CENTER);
+			} else {
+				CG_DrawPic( -10, -10, 650, 490, cgs.media.viewFlashFire[( cg.time / 50 ) % 16] );
+			}
 		}
+
 		trap_R_SetColor( NULL );
 
 		CG_S_AddLoopingSound( cg.snap->ps.clientNum, cg.snap->ps.origin, vec3_origin, cgs.media.flameSound, (int)( 255.0 * alpha ) );
@@ -3098,7 +3102,7 @@ CG_DrawFlashBlend
 static void CG_DrawFlashBlend( void ) {
 	CG_DrawFlashLightning();
 	CG_DrawFlashFire();
-	CG_DrawFlashDamage();
+	if ( cg_bloodFlash.integer == 1 ) CG_DrawFlashDamage();
 	CG_DrawFlashFade();
 }
 
