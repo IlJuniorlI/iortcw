@@ -4627,11 +4627,11 @@ void CG_FireWeapon( centity_t *cent ) {
 		if ( weap->ejectBrassFunc && cg_brassTime.integer > 0 ) {
 			weap->ejectBrassFunc( cent );
 		}
-
-		//unlagged - attack prediction #1
-		CG_PredictWeaponEffects( cent );
-		//unlagged - attack prediction #1
 	} // jpw
+
+	//unlagged - attack prediction #1
+	CG_PredictWeaponEffects( cent );
+	//unlagged - attack prediction #1
 }
 
 

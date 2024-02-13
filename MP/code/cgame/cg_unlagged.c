@@ -68,7 +68,7 @@ void CG_PredictWeaponEffects( centity_t *cent ) {
 	entityState_t *ent = &cent->currentState;
 	qboolean bulletWeapon = qfalse;
 	float spread;
-	int bulletWeapons[] = { WP_COLT, WP_LUGER, WP_MP40, WP_STEN, WP_THOMPSON, WP_MAUSER, WP_SNIPERRIFLE, WP_SNOOPERSCOPE };
+	int bulletWeapons[] = { WP_COLT, WP_LUGER, WP_MP40, WP_STEN, WP_THOMPSON, WP_MAUSER, WP_GARAND, WP_SNIPERRIFLE, WP_SNOOPERSCOPE };
 	int length = sizeof(bulletWeapons) / sizeof(bulletWeapons[0]);
 	int i;
 
