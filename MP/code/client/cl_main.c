@@ -4136,6 +4136,21 @@ void CL_Init( void ) {
 	Cvar_Get( "password", "", CVAR_USERINFO );
 	Cvar_Get( "cg_predictItems", "1", CVAR_USERINFO | CVAR_ARCHIVE );
 
+	//unlagged - client options
+	Cvar_Get( "cg_delag", "1", CVAR_ARCHIVE | CVAR_USERINFO );
+	Cvar_Get( "cg_debugDelag", "0", CVAR_USERINFO | CVAR_CHEAT );
+	Cvar_Get( "cg_drawBBox", "0", CVAR_CHEAT );
+	Cvar_Get( "cg_cmdTimeNudge", "0", CVAR_ARCHIVE | CVAR_USERINFO );
+	// this will be automagically copied from the server
+	Cvar_Get( "sv_fps", "20", 0 );
+	Cvar_Get( "cg_projectileNudge", "0", CVAR_ARCHIVE );
+	Cvar_Get( "cg_optimizePrediction", "1", CVAR_ARCHIVE );
+	//Cvar_Get( "cl_timeNudge", "0", CVAR_ARCHIVE );
+	Cvar_Get( "cg_latentSnaps", "0", CVAR_USERINFO | CVAR_CHEAT );
+	Cvar_Get( "cg_latentCmds", "0", CVAR_USERINFO | CVAR_CHEAT );
+	Cvar_Get( "cg_plOut", "0", CVAR_USERINFO | CVAR_CHEAT );
+	//unlagged - client options
+
 #ifdef USE_MUMBLE
 	cl_useMumble = Cvar_Get ("cl_useMumble", "0", CVAR_ARCHIVE | CVAR_LATCH);
 	cl_mumbleScale = Cvar_Get ("cl_mumbleScale", "0.0254", CVAR_ARCHIVE);
