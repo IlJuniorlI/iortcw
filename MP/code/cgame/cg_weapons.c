@@ -4627,6 +4627,10 @@ void CG_FireWeapon( centity_t *cent ) {
 		if ( weap->ejectBrassFunc && cg_brassTime.integer > 0 ) {
 			weap->ejectBrassFunc( cent );
 		}
+
+		//unlagged - attack prediction #1
+		CG_PredictWeaponEffects( cent );
+		//unlagged - attack prediction #1
 	} // jpw
 }
 
@@ -5747,7 +5751,10 @@ hit splashes (FIXME: random seed isn't synced anymore)
 		organized so that the pattern is more of a circle (with some degree of randomness)
 ================
 */
-static void CG_VenomPattern( vec3_t origin, vec3_t origin2, int otherEntNum ) {
+//unlagged - attack prediction
+// made this non-static for access from cg_unlagged.c
+//static void CG_VenomPattern( vec3_t origin, vec3_t origin2, int otherEntNum ) {
+void CG_VenomPattern( vec3_t origin, vec3_t origin2, int seed, int otherEntNum ) {
 	int i;
 	float r, u;
 	vec3_t end;
@@ -5761,8 +5768,12 @@ static void CG_VenomPattern( vec3_t origin, vec3_t origin2, int otherEntNum ) {
 
 	// generate the "random" spread pattern
 	for ( i = 0 ; i < DEFAULT_VENOM_COUNT ; i++ ) {
-		r = crandom() * DEFAULT_VENOM_SPREAD;
-		u = crandom() * DEFAULT_VENOM_SPREAD;
+		//unlagged - attack prediction
+		//r = crandom() * DEFAULT_VENOM_SPREAD;
+		//u = crandom() * DEFAULT_VENOM_SPREAD;
+		r = Q_crandom( &seed ) * DEFAULT_VENOM_SPREAD;
+		u = Q_crandom( &seed ) * DEFAULT_VENOM_SPREAD;
+		//unlagged - attack prediction
 		VectorMA( origin, 8192, forward, end );
 		VectorMA( end, r, right, end );
 		VectorMA( end, u, up, end );
@@ -5800,7 +5811,10 @@ void CG_VenomFire( entityState_t *es, qboolean fullmode ) {
 		}
 	}
 	if ( fullmode ) {
-		CG_VenomPattern( es->pos.trBase, es->origin2, es->otherEntityNum );
+		//unlagged - attack prediction
+		//CG_VenomPattern( es->pos.trBase, es->origin2, es->otherEntityNum );
+		CG_VenomPattern( es->pos.trBase, es->origin2, es->eventParm, es->otherEntityNum );
+		//unlagged - attack prediction
 	}
 }
 

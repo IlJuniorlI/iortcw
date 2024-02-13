@@ -42,6 +42,10 @@ If you have questions concerning this license or the applicable additional terms
 // DHM - Nerve
 //#define PRE_RELEASE_DEMO
 
+//unlagged - lag simulation #2
+#define MAX_LATENT_CMDS 64
+//unlagged - lag simulation #2
+
 #ifdef STANDALONE
   #define PRODUCT_NAME			"iofoo3"
   #define BASEGAME			"foobar"
@@ -648,6 +652,11 @@ typedef struct {
 #define QuatCopy(a,b)			((b)[0]=(a)[0],(b)[1]=(a)[1],(b)[2]=(a)[2],(b)[3]=(a)[3])
 
 #define SnapVector( v ) {v[0] = ( (int)( v[0] ) ); v[1] = ( (int)( v[1] ) ); v[2] = ( (int)( v[2] ) );}
+
+//unlagged - attack prediction #3
+// moved from g_weapon.c
+void SnapVectorTowards( vec3_t v, vec3_t to );
+//unlagged - attack prediction #3
 
 // just in case you don't want to use the macros
 vec_t _DotProduct( const vec3_t v1, const vec3_t v2 );

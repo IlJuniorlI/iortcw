@@ -1119,6 +1119,9 @@ into a wall.
 //			too far off the target surface causes the the distance between the transmitted impact
 //			point and the actual hit surface larger than the mark radius.  (so nothing shows) )
 
+//unlagged - attack prediction #3
+// moved to q_shared.c
+/*
 void SnapVectorTowards( vec3_t v, vec3_t to ) {
 	int i;
 
@@ -1130,6 +1133,8 @@ void SnapVectorTowards( vec3_t v, vec3_t to ) {
 		}
 	}
 }
+*/
+//unlagged - attack prediction #3
 
 // JPW
 // mechanism allows different weapon damage for single/multiplayer; we want "balanced" weapons
@@ -1554,15 +1559,30 @@ void Bullet_Endpos( gentity_t *ent, float spread, vec3_t *end ) {
 	qboolean randSpread = qtrue;
 	int dist = 8192;
 
-	r = crandom() * spread;
-	u = crandom() * spread;
+	//unlagged - attack prediction #2
+	// we have to use something now that the client knows in advance
+	int			seed = ent->client->attackTime % 256;
+	//unlagged - attack prediction #2
+
+	//unlagged - attack prediction #2
+	// this has to match what's on the client
+	//r = crandom() * spread;
+	//u = crandom() * spread;
+	r = Q_crandom(&seed) * spread;
+	u = Q_crandom(&seed) * spread;
+	//unlagged - attack prediction #2
 
 	// Ridah, if this is an AI shooting, apply their accuracy
 	if ( ent->r.svFlags & SVF_CASTAI ) {
 		float accuracy;
 		accuracy = ( 1.0 - AICast_GetAccuracy( ent->s.number ) ) * AICAST_AIM_SPREAD;
-		r += crandom() * accuracy;
-		u += crandom() * ( accuracy * 1.25 );
+		//unlagged - attack prediction #2
+		// this has to match what's on the client
+		//r += crandom() * accuracy;
+		//u += crandom() * ( accuracy * 1.25 );
+		r += Q_crandom(&seed) * accuracy;
+		u += Q_crandom(&seed) * ( accuracy * 1.25 );
+		//unlagged - attack prediction #2
 	} else {
 		if ( ent->s.weapon == WP_SNOOPERSCOPE || ent->s.weapon == WP_SNIPERRIFLE ) {
 			// aim dir already accounted for sway of scoped weapons in CalcMuzzlePoints()
@@ -1608,7 +1628,17 @@ void Bullet_Fire_Extended( gentity_t *source, gentity_t *attacker, vec3_t start,
 
 	damage *= s_quadFactor;
 
+	//unlagged - backward reconciliation #2
+	// backward-reconcile the other clients
+	G_DoTimeShiftFor( attacker );
+	//unlagged - backward reconciliation #2
+
 	G_HistoricalTrace( source, &tr, start, NULL, NULL, end, source->s.number, MASK_SHOT );
+
+	//unlagged - backward reconciliation #2
+	// put them back
+	G_UndoTimeShiftFor( attacker );
+	//unlagged - backward reconciliation #2
 
 	// DHM - Nerve :: only in single player
 	if ( g_gametype.integer == GT_SINGLE_PLAYER ) {
@@ -1652,6 +1682,11 @@ void Bullet_Fire_Extended( gentity_t *source, gentity_t *attacker, vec3_t start,
 	if ( traceEnt->takedamage && traceEnt->client && !( traceEnt->flags & FL_DEFENSE_GUARD ) ) {
 		tent = G_TempEntity( tr.endpos, EV_BULLET_HIT_FLESH );
 		tent->s.eventParm = traceEnt->s.number;
+		//unlagged - attack prediction #2
+		// we need the client number to determine whether or not to
+		// suppress this event
+		tent->s.clientNum = attacker->s.clientNum;
+		//unlagged - attack prediction #2
 		if ( LogAccuracyHit( traceEnt, attacker ) ) {
 			attacker->client->ps.persistant[PERS_ACCURACY_HITS]++;
 		}
@@ -1673,6 +1708,11 @@ void Bullet_Fire_Extended( gentity_t *source, gentity_t *attacker, vec3_t start,
 	} else if ( traceEnt->takedamage && traceEnt->s.eType == ET_BAT ) {
 		tent = G_TempEntity( tr.endpos, EV_BULLET_HIT_FLESH );
 		tent->s.eventParm = traceEnt->s.number;
+		//unlagged - attack prediction #2
+		// we need the client number to determine whether or not to
+		// suppress this event
+		tent->s.clientNum = attacker->s.clientNum;
+		//unlagged - attack prediction #2
 	} else {
 		// Ridah, bullet impact should reflect off surface
 		vec3_t reflect;
@@ -1705,6 +1745,11 @@ void Bullet_Fire_Extended( gentity_t *source, gentity_t *attacker, vec3_t start,
 		VectorNormalize( reflect );
 
 		tent->s.eventParm = DirToByte( reflect );
+		//unlagged - attack prediction #2
+		// we need the client number to determine whether or not to
+		// suppress this event
+		tent->s.clientNum = attacker->s.clientNum;
+		//unlagged - attack prediction #2
 
 		if ( traceEnt->flags & FL_DEFENSE_GUARD ) {
 			tent->s.otherEntityNum2 = traceEnt->s.number;   // force sparks
@@ -1935,10 +1980,19 @@ void VenomPattern( vec3_t origin, vec3_t origin2, int seed, gentity_t *ent ) {
 	PerpendicularVector( right, forward );
 	CrossProduct( forward, right, up );
 
+	//unlagged - backward reconciliation #2
+	// backward-reconcile the other clients
+	G_DoTimeShiftFor( ent );
+	//unlagged - backward reconciliation #2
+
 	// generate the "random" spread pattern
 	for ( i = 0 ; i < DEFAULT_VENOM_COUNT ; i++ ) {
+		//unlagged - backward reconciliation #2
+		//r = crandom() * DEFAULT_VENOM_SPREAD;
+		//u = crandom() * DEFAULT_VENOM_SPREAD;
 		r = Q_crandom( &seed ) * DEFAULT_VENOM_SPREAD;
 		u = Q_crandom( &seed ) * DEFAULT_VENOM_SPREAD;
+		//unlagged - backward reconciliation #2
 		VectorMA( origin, 8192, forward, end );
 		VectorMA( end, r, right, end );
 		VectorMA( end, u, up, end );
@@ -1947,6 +2001,11 @@ void VenomPattern( vec3_t origin, vec3_t origin2, int seed, gentity_t *ent ) {
 			ent->client->ps.persistant[PERS_ACCURACY_HITS]++;
 		}
 	}
+
+	//unlagged - backward reconciliation #2
+	// put them back
+	G_UndoTimeShiftFor( ent );
+	//unlagged - backward reconciliation #2
 }
 
 /*
@@ -2010,7 +2069,11 @@ void weapon_venom_fire( gentity_t *ent, qboolean fullmode, float aimSpreadScale 
 
 	VectorScale( forward, 4096, tent->s.origin2 );
 	SnapVector( tent->s.origin2 );
-	tent->s.eventParm = rand() & 255;       // seed for spread pattern
+	//unlagged - attack prediction #2
+	// this has to be something the client can predict now
+	//tent->s.eventParm = rand() & 255;		// seed for spread pattern
+	tent->s.eventParm = ent->client->attackTime % 256; // seed for spread pattern
+	//unlagged - attack prediction #2
 	tent->s.otherEntityNum = ent->s.number;
 
 	if ( fullmode ) {

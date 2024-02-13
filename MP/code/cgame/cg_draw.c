@@ -1216,7 +1216,9 @@ static void CG_DrawLagometer( void ) {
 	int color;
 	float vscale;
 
-	if ( !cg_lagometer.integer || cgs.localServer ) {
+	//unlagged - misc
+	if ( !cg_lagometer.integer /* || cgs.localServer */) {
+	//unlagged - misc
 //	if(0) {
 		CG_DrawDisconnect();
 		return;

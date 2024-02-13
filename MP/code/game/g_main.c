@@ -164,6 +164,14 @@ vmCvar_t g_dbgRevive;
 
 vmCvar_t g_localTeamPref;
 
+//unlagged - server options
+vmCvar_t	g_delagHitscan;
+vmCvar_t	g_unlaggedVersion;
+vmCvar_t	g_truePing;
+vmCvar_t	g_lightningDamage;
+vmCvar_t	sv_fps;
+//unlagged - server options
+
 cvarTable_t gameCvarTable[] = {
 	// don't override the cheat state set by the system
 	{ &g_cheats, "sv_cheats", "", 0, qfalse },
@@ -297,6 +305,15 @@ cvarTable_t gameCvarTable[] = {
 	{&g_antilag, "g_antilag", "0", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qfalse},
 
 	{&g_dbgRevive, "g_dbgRevive", "0", 0, 0, qfalse},
+	
+	//unlagged - server options
+	{ &g_delagHitscan, "g_delagHitscan", "1", CVAR_ARCHIVE | CVAR_SERVERINFO, 0, qtrue },
+	{ &g_unlaggedVersion, "g_unlaggedVersion", "2.0", CVAR_ROM | CVAR_SERVERINFO, 0, qfalse },
+	{ &g_truePing, "g_truePing", "1", CVAR_ARCHIVE, 0, qtrue },
+	{ &g_lightningDamage, "g_lightningDamage", "8", 0, 0, qtrue },
+	// it's CVAR_SYSTEMINFO so the client's sv_fps will be automagically set to its value
+	{ &sv_fps, "sv_fps", "20", CVAR_SYSTEMINFO | CVAR_ARCHIVE, 0, qfalse },
+	//unlagged - server options
 
 	{ &g_localTeamPref, "g_localTeamPref", "", 0, 0, qfalse }
 };
@@ -2740,6 +2757,9 @@ void G_RunFrame( int levelTime ) {
 			continue;
 		}
 
+//unlagged - backward reconciliation #2
+		// we'll run missiles separately to save CPU in backward reconciliation
+/*
 		if ( ent->s.eType == ET_MISSILE
 			 || ent->s.eType == ET_FLAMEBARREL
 			 || ent->s.eType == ET_FP_PARTS
@@ -2750,6 +2770,8 @@ void G_RunFrame( int levelTime ) {
 			G_RunMissile( ent );
 			continue;
 		}
+*/
+//unlagged - backward reconciliation #2
 
 		// DHM - Nerve :: Server-side collision for flamethrower
 		if ( ent->s.eType == ET_FLAMETHROWER_CHUNK ) {
@@ -2782,6 +2804,37 @@ void G_RunFrame( int levelTime ) {
 
 		G_RunThink( ent );
 	}
+
+	//unlagged - backward reconciliation #2
+	// NOW run the missiles, with all players backward-reconciled
+	// to the positions they were in exactly 50ms ago, at the end
+	// of the last server frame
+	G_TimeShiftAllClients( level.previousTime, NULL );
+
+	ent = &g_entities[0];
+	for (i=0 ; i<level.num_entities ; i++, ent++) {
+		if ( !ent->inuse ) {
+			continue;
+		}
+
+		// temporary entities don't think
+		if ( ent->freeAfterEvent ) {
+			continue;
+		}
+
+		if ( ent->s.eType == ET_MISSILE
+			 || ent->s.eType == ET_FLAMEBARREL
+			 || ent->s.eType == ET_FP_PARTS
+			 || ent->s.eType == ET_FIRE_COLUMN
+			 || ent->s.eType == ET_FIRE_COLUMN_SMOKE
+			 || ent->s.eType == ET_EXPLO_PART
+			 || ent->s.eType == ET_RAMJET ) {
+			G_RunMissile( ent );
+		}
+	}
+
+	G_UnTimeShiftAllClients( NULL );
+//unlagged - backward reconciliation #2
 
 	// Ridah, move the AI
 	//AICast_StartServerFrame ( level.time );
@@ -2827,4 +2880,11 @@ void G_RunFrame( int levelTime ) {
 
 	// Ridah, check if we are reloading, and times have expired
 	CheckReloadStatus();
+
+	//unlagged - backward reconciliation #4
+	// record the time at the end of this frame - it should be about
+	// the time the next frame begins - when the server starts
+	// accepting commands from connected clients
+	level.frameStartTime = trap_Milliseconds();
+	//unlagged - backward reconciliation #4
 }
