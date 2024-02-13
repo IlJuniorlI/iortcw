@@ -5994,6 +5994,7 @@ static qboolean CG_CalcMuzzlePoint( int entityNum, vec3_t muzzle ) {
 	return qtrue;
 }
 
+/*
 void SnapVectorTowards( vec3_t v, vec3_t to ) {
 	int i;
 
@@ -6005,7 +6006,7 @@ void SnapVectorTowards( vec3_t v, vec3_t to ) {
 		}
 	}
 }
-
+*/
 
 /*
 ======================

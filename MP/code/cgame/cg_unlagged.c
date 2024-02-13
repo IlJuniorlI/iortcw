@@ -50,7 +50,6 @@ float G_GetWeaponSpread( int weapon ) {
 		case WP_SNOOPERSCOPE: return 700;
 		}
 
-	G_Printf( "shouldn't ever get here (weapon %d)\n",weapon );
 	// jpw
 	return 0;   // shouldn't get here
 }
@@ -69,6 +68,9 @@ void CG_PredictWeaponEffects( centity_t *cent ) {
 	entityState_t *ent = &cent->currentState;
 	qboolean bulletWeapon = qfalse;
 	float spread;
+	int bulletWeapons[] = { WP_COLT, WP_LUGER, WP_MP40, WP_STEN, WP_THOMPSON, WP_MAUSER, WP_SNIPERRIFLE, WP_SNOOPERSCOPE };
+	int length = sizeof(bulletWeapons) / sizeof(bulletWeapons[0]);
+	int i;
 
 	// if the client isn't us, forget it
 	if ( cent->currentState.number != cg.predictedPlayerState.clientNum ) {
@@ -88,11 +90,8 @@ void CG_PredictWeaponEffects( centity_t *cent ) {
 	AngleVectors( cg.predictedPlayerState.viewangles, forward, right, up );
 	VectorMA( muzzlePoint, 14, forward, muzzlePoint );
 
-	int bulletWeapons[] = { WP_COLT, WP_LUGER, WP_MP40, WP_STEN, WP_THOMPSON, WP_MAUSER, WP_SNIPERRIFLE, WP_SNOOPERSCOPE };
-	int length = sizeof(bulletWeapons) / sizeof(bulletWeapons[0]);
-
-	for (int i = 0; i < length; i++) {
-		if ( ent->weapon == bulletWeapons[i]) {
+	for (i = 0; i < length; i++) {
+		if ( ent->weapon == bulletWeapons[i] ) {
 			bulletWeapon = qtrue;
 			spread = G_GetWeaponSpread( bulletWeapons[i] );
 			break;
@@ -130,7 +129,7 @@ void CG_PredictWeaponEffects( centity_t *cent ) {
 			}
 
 			// do the shotgun pellets
-			CG_ShotgunPattern( muzzlePoint, endPoint, cg.oldTime % 256, cg.predictedPlayerState.clientNum );
+			CG_VenomPattern( muzzlePoint, endPoint, cg.oldTime % 256, cg.predictedPlayerState.clientNum );
 			//Com_Printf( "Predicted shotgun pattern\n" );
 		}
 	}

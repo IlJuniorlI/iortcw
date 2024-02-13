@@ -2573,6 +2573,7 @@ Q3CGOBJ_ = \
   $(B)/$(BASEGAME)/cgame/cg_sound.o \
   $(B)/$(BASEGAME)/cgame/cg_spawn.o \
   $(B)/$(BASEGAME)/cgame/cg_trails.o \
+  $(B)/$(BASEGAME)/cgame/cg_unlagged.o \
   $(B)/$(BASEGAME)/cgame/cg_view.o \
   $(B)/$(BASEGAME)/cgame/cg_weapons.o \
   $(B)/$(BASEGAME)/ui/ui_shared.o \
@@ -2649,6 +2650,7 @@ Q3GOBJ_ = \
   $(B)/$(BASEGAME)/game/g_team.o \
   $(B)/$(BASEGAME)/game/g_tramcar.o \
   $(B)/$(BASEGAME)/game/g_trigger.o \
+  $(B)/$(BASEGAME)/game/g_unlagged.o \
   $(B)/$(BASEGAME)/game/g_utils.o \
   $(B)/$(BASEGAME)/game/g_weapon.o \
   \
