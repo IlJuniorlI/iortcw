@@ -143,11 +143,13 @@ void CG_PredictWeaponEffects( centity_t *cent ) {
 			trace_t tr;
 			qboolean flesh;
 			int fleshEntityNum;
-			vec3_t endPoint;
+			vec3_t endPoint, origin1, origin2;
 			qboolean randSpread = qtrue;
 			int dist = 8192;
 			float aimSpreadScale;
+			centity_t *c = &cg_entities[tr.entityNum];
 
+			
 			// THIS IS FOR DEBUGGING!
 			// you definitely *will* want something like this to test the backward reconciliation
 			// to make sure it's working *exactly* right
@@ -159,8 +161,8 @@ void CG_PredictWeaponEffects( centity_t *cent ) {
 				if ( tr.fraction < 1.0f && (tr.contents & CONTENTS_BODY) ) {
 					// if we have two snapshots (we're interpolating)
 					if ( cg.nextSnap ) {
-						centity_t *c = &cg_entities[tr.entityNum];
-						vec3_t origin1, origin2;
+						//centity_t *c = &cg_entities[tr.entityNum];
+						//vec3_t origin1, origin2;
 
 						// figure the two origins used for interpolation
 						BG_EvaluateTrajectory( &c->currentState.pos, cg.snap->serverTime, origin1 );
@@ -180,8 +182,8 @@ void CG_PredictWeaponEffects( centity_t *cent ) {
 						// the client clock has either drifted ahead (seems to happen once per server frame
 						// when you play locally) or the client is using timenudge
 						// in any case, CG_CalcEntityLerpPositions extrapolated rather than interpolated
-						centity_t *c = &cg_entities[tr.entityNum];
-						vec3_t origin1, origin2;
+						//centity_t *c = &cg_entities[tr.entityNum];
+						//vec3_t origin1, origin2;
 
 						c->currentState.pos.trTime = TR_LINEAR_STOP;
 						c->currentState.pos.trTime = cg.snap->serverTime;
@@ -202,7 +204,7 @@ void CG_PredictWeaponEffects( centity_t *cent ) {
 				}
 			}
 
-			aimSpreadScale = cg.predictedPlayerState.aimSpreadScale;
+			aimSpreadScale = (float)cg.predictedPlayerState.aimSpreadScale / 255.0;
 			aimSpreadScale += 0.15f; // (SA) just adding a temp /maximum/ accuracy for player (this will be re-visited in greater detail :)
 			if ( ent->groundEntityNum == ENTITYNUM_NONE ) {
 				aimSpreadScale = 2.0f;
