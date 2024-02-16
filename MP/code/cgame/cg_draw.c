@@ -2960,6 +2960,10 @@ static void CG_DrawFlashDamage( void ) {
 		return;
 	}
 
+	if (!cg_bloodFlash.integer) {
+		return;
+	}
+
 	if ( cg.v_dmg_time > cg.time ) {
 		redFlash = fabs( cg.v_dmg_pitch * ( ( cg.v_dmg_time - cg.time ) / DAMAGE_TIME ) );
 
@@ -2999,6 +3003,10 @@ static void CG_DrawFlashFire( void ) {
 		return;
 	}
 
+	if (!cg_muzzleFlash.integer) {
+		return;
+	}
+
 	if ( !cg.snap->ps.onFireStart ) {
 		cg.v_noFireTime = cg.time;
 		return;
@@ -3021,19 +3029,17 @@ static void CG_DrawFlashFire( void ) {
 			alpha = max;
 		}
 
-		if ( cg_muzzleFlash.integer == 1 ) {
-			col[0] = alpha;
-			col[1] = alpha;
-			col[2] = alpha;
-			col[3] = alpha;
-			trap_R_SetColor( col );
-			if ( cg_fixedAspect.integer ) {
-				CG_SetScreenPlacement(PLACE_STRETCH, PLACE_STRETCH);
-				CG_DrawPic( -10, -10, 650, 490, cgs.media.viewFlashFire[( cg.time / 50 ) % 16] );
-				CG_SetScreenPlacement(PLACE_CENTER, PLACE_CENTER);
-			} else {
-				CG_DrawPic( -10, -10, 650, 490, cgs.media.viewFlashFire[( cg.time / 50 ) % 16] );
-			}
+		col[0] = alpha;
+		col[1] = alpha;
+		col[2] = alpha;
+		col[3] = alpha;
+		trap_R_SetColor( col );
+		if ( cg_fixedAspect.integer ) {
+			CG_SetScreenPlacement(PLACE_STRETCH, PLACE_STRETCH);
+			CG_DrawPic( -10, -10, 650, 490, cgs.media.viewFlashFire[( cg.time / 50 ) % 16] );
+			CG_SetScreenPlacement(PLACE_CENTER, PLACE_CENTER);
+		} else {
+			CG_DrawPic( -10, -10, 650, 490, cgs.media.viewFlashFire[( cg.time / 50 ) % 16] );
 		}
 
 		trap_R_SetColor( NULL );
@@ -3104,7 +3110,7 @@ CG_DrawFlashBlend
 static void CG_DrawFlashBlend( void ) {
 	CG_DrawFlashLightning();
 	CG_DrawFlashFire();
-	if ( cg_bloodFlash.integer == 1 ) CG_DrawFlashDamage();
+	CG_DrawFlashDamage();
 	CG_DrawFlashFade();
 }
 

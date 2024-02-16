@@ -258,6 +258,7 @@ void CG_PredictWeaponEffects( centity_t *cent ) {
 			// do the bullet impact
 			//CG_Bullet( tr.endpos, cg.predictedPlayerState.clientNum, tr.plane.normal, flesh, fleshEntityNum );
 			CG_Bullet( tr.endpos, cg.predictedPlayerState.clientNum, tr.plane.normal, flesh, fleshEntityNum , qfalse, ent->otherEntityNum2, 0 );
+			//CG_Bullet( es->pos.trBase, es->otherEntityNum, dir, qtrue, es->eventParm, qfalse, es->otherEntityNum2, 0 );
 			//Com_Printf( "Predicted bullet\n" );
 		}
 	}
