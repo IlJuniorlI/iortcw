@@ -154,11 +154,12 @@ void CG_PredictWeaponEffects( centity_t *cent ) {
 			// you definitely *will* want something like this to test the backward reconciliation
 			// to make sure it's working *exactly* right
 			if ( cg_debugDelag.integer ) {
+				CG_Printf( "Predicted bullet\n" );
 				// trace forward
 				CG_Trace( &tr, muzzlePoint, vec3_origin, vec3_origin, endPoint, cent->currentState.number, CONTENTS_BODY|CONTENTS_SOLID );
 
 				// did we hit another player?
-				if ( tr.fraction < 1.0f && (tr.contents & CONTENTS_BODY) ) {
+				if ( tr.fraction < 1.0 && (tr.contents & CONTENTS_BODY) ) {
 					// if we have two snapshots (we're interpolating)
 					if ( cg.nextSnap ) {
 						//centity_t *c = &cg_entities[tr.entityNum];
