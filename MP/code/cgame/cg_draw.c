@@ -2956,11 +2956,11 @@ static void CG_DrawFlashDamage( void ) {
 		return;
 	}
 
-	if (!cg_blood.integer) {
+	if ( !cg_blood.integer ) {
 		return;
 	}
 
-	if (!cg_bloodFlash.integer) {
+	if ( !cg_bloodFlash.integer) {
 		return;
 	}
 
@@ -3003,7 +3003,7 @@ static void CG_DrawFlashFire( void ) {
 		return;
 	}
 
-	if (!cg_muzzleFlash.integer) {
+	if ( !cg_muzzleFlash.integer ) {
 		return;
 	}
 

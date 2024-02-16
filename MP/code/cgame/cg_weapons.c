@@ -4515,7 +4515,10 @@ void CG_FireWeapon( centity_t *cent ) {
 			CG_MachineGunEjectBrass( cent );
 		}
 
-		cent->muzzleFlashTime = cg.time;
+		if ( !cg_muzzleFlash.integer ) {
+			cent->muzzleFlashTime = 0;
+		}
+			else cent->muzzleFlashTime = cg.time;
 
 		return;
 	}
