@@ -4534,9 +4534,14 @@ void CG_FireWeapon( centity_t *cent ) {
 
 	cg.lastFiredWeapon = ent->weapon;   //----(SA)	added
 
-	// mark the entity as muzzle flashing, so when it is added it will
-	// append the flash to the weapon model
-	cent->muzzleFlashTime = cg.time;
+	if ( !cg_muzzleFlash.integer ) {
+		cent->muzzleFlashTime = cg.time;
+	}
+		else {
+			// mark the entity as muzzle flashing, so when it is added it will
+			// append the flash to the weapon model
+			cent->muzzleFlashTime = cg.time;
+		}
 
 	// RF, kick angles
 	if ( ent->number == cg.snap->ps.clientNum ) {

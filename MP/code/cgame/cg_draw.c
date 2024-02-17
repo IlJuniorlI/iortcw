@@ -2960,7 +2960,7 @@ static void CG_DrawFlashDamage( void ) {
 		return;
 	}
 
-	if ( !cg_bloodFlash.integer) {
+	if ( !cg_bloodFlash.integer ) {
 		return;
 	}
 
