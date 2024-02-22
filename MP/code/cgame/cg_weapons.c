@@ -4535,7 +4535,7 @@ void CG_FireWeapon( centity_t *cent ) {
 	cg.lastFiredWeapon = ent->weapon;   //----(SA)	added
 
 	if ( !cg_muzzleFlash.integer ) {
-		cent->muzzleFlashTime = cg.time;
+		cent->muzzleFlashTime = 0;
 	}
 		else {
 			// mark the entity as muzzle flashing, so when it is added it will
