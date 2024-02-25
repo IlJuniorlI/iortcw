@@ -154,8 +154,8 @@ void CG_PredictWeaponEffects( centity_t *cent ) {
 			if ( ent->groundEntityNum == ENTITYNUM_NONE ) {
 				aimSpreadScale = 2.0f;
 			} else if ( aimSpreadScale > 1 || bulletWeapon == WP_MAUSER) {
-					aimSpreadScale = 1.0f;  // still cap at 1.0
-					}
+				aimSpreadScale = 1.0f;  // still cap at 1.0
+				}
 
 			spread = spread * aimSpreadScale;
 
