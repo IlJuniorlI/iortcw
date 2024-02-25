@@ -153,10 +153,9 @@ void CG_PredictWeaponEffects( centity_t *cent ) {
 			aimSpreadScale += 0.15f; // (SA) just adding a temp /maximum/ accuracy for player (this will be re-visited in greater detail :)
 			if ( ent->groundEntityNum == ENTITYNUM_NONE ) {
 				aimSpreadScale = 2.0f;
-			} 
-				else if ( aimSpreadScale > 1 || bulletWeapon == WP_MAUSER) {
+			} else if ( aimSpreadScale > 1 || bulletWeapon == WP_MAUSER) {
 					aimSpreadScale = 1.0f;  // still cap at 1.0
-				}
+					}
 
 			spread = spread * aimSpreadScale;
 
