@@ -2604,6 +2604,7 @@ static void CG_DrawLimboMessage( void ) {
 	const char *str;
 	playerState_t *ps;
 	//int w;
+	int y = 104;
 
 	if ( cgs.gametype < GT_WOLF ) {
 		return;
@@ -2611,36 +2612,48 @@ static void CG_DrawLimboMessage( void ) {
 
 	ps = &cg.snap->ps;
 
-	if ( ps->stats[STAT_HEALTH] > 0 ) {
-		return;
-	}
-
 	if ( cg.snap->ps.pm_flags & PMF_LIMBO || cgs.clientinfo[cg.clientNum].team == TEAM_SPECTATOR ) {
 		return;
 	}
 
 	color[3] *= cg_hudAlpha.value;
 
-	if ( cg_descriptiveText.integer ) {
-		str = CG_TranslateString( "You are wounded and waiting for a medic." );
-		CG_DrawSmallStringColor( INFOTEXT_STARTX, 68, str, color );
-
-		str = CG_TranslateString( "Press JUMP to go into reinforcement queue." );
-		CG_DrawSmallStringColor( INFOTEXT_STARTX, 86, str, color );
-	}
-
-	// JPW NERVE
-	if ( cg.snap->ps.persistant[PERS_RESPAWNS_LEFT] == 0 ) {
-		str = CG_TranslateString( "No more reinforcements this round." );
-	} else if ( cgs.clientinfo[cg.snap->ps.clientNum].team == TEAM_RED ) {
-		str = va( CG_TranslateString( "Reinforcements deploy in %d seconds." ),
+	if ( ps->stats[STAT_HEALTH] > 0 ) {
+		// Spawn Timer
+		color[1] = 0;
+		color[2] = 0;
+		y = 68;
+		switch ( cgs.clientinfo[cg.snap->ps.clientNum].team ) {
+			case TEAM_RED:
+				str = va( CG_TranslateString( "%d" ),
 				  (int)( 1 + (float)( cg_redlimbotime.integer - ( cg.time % cg_redlimbotime.integer ) ) * 0.001f ) );
-	} else {
-		str = va( CG_TranslateString( "Reinforcements deploy in %d seconds." ),
+				  break;
+			default:
+				str = va( CG_TranslateString( "%d" ),
 				  (int)( 1 + (float)( cg_bluelimbotime.integer - ( cg.time % cg_bluelimbotime.integer ) ) * 0.001f ) );
+		}
+	} else {
+		if ( cg_descriptiveText.integer ) {
+			str = CG_TranslateString( "You are wounded and waiting for a medic." );
+			CG_DrawSmallStringColor( INFOTEXT_STARTX, 68, str, color );
+
+			str = CG_TranslateString( "Press JUMP to go into reinforcement queue." );
+			CG_DrawSmallStringColor( INFOTEXT_STARTX, 86, str, color );
+		}
+
+		// JPW NERVE
+		if ( cg.snap->ps.persistant[PERS_RESPAWNS_LEFT] == 0 ) {
+			str = CG_TranslateString( "No more reinforcements this round." );
+		} else if ( cgs.clientinfo[cg.snap->ps.clientNum].team == TEAM_RED ) {
+			str = va( CG_TranslateString( "Reinforcements deploy in %d seconds." ),
+					(int)( 1 + (float)( cg_redlimbotime.integer - ( cg.time % cg_redlimbotime.integer ) ) * 0.001f ) );
+		} else {
+			str = va( CG_TranslateString( "Reinforcements deploy in %d seconds." ),
+					(int)( 1 + (float)( cg_bluelimbotime.integer - ( cg.time % cg_bluelimbotime.integer ) ) * 0.001f ) );
+		}
 	}
 
-	CG_DrawSmallStringColor( INFOTEXT_STARTX, 104, str, color );
+	CG_DrawSmallStringColor( INFOTEXT_STARTX, y, str, color );
 	// jpw
 
 	trap_R_SetColor( NULL );
