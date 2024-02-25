@@ -6049,8 +6049,10 @@ void CG_Bullet( vec3_t end, int sourceEntityNum, vec3_t normal, qboolean flesh, 
 		VectorCopy( cg_entities[cg.snap->ps.viewlocked_entNum].currentState.pos.trBase, muzzle );
 		VectorMA( muzzle, 16, up, muzzle );
 
+		//unlagged
 		r = Q_crandom( &seed ) * MG42_SPREAD_MP;
 		u = Q_crandom( &seed ) * MG42_SPREAD_MP;
+		//unlagged
 
 		VectorMA( muzzle, 8192, forward, end );
 		VectorMA( end, r, right, end );
