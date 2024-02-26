@@ -757,9 +757,9 @@ static void CG_MapRestart( void ) {
 //	}
 
 	// play the "fight" sound if this is a restart without warmup
-	if ( cg.warmup == 0 && cgs.gametype == GS_PLAYING ) {
+	if ( cg.warmup == 0 /*&& cgs.gamestate == GS_PLAYING*/ ) {
 		trap_S_StartLocalSound( cgs.media.countFightSound, CHAN_ANNOUNCER );
-		CG_CenterPrint( "FIGHT!", 120, GIANTCHAR_WIDTH * 2 );
+		CG_CenterPrint( "FIGHT!", 120, GIANTCHAR_WIDTH );
 	}
 #ifdef MISSIONPACK
 	if ( cg_singlePlayerActive.integer ) {
