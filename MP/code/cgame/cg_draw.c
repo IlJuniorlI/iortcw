@@ -2769,6 +2769,29 @@ static void CG_DrawWarmup( void ) {
 		sec = 0;
 	}
 
+	if ( sec != cg.warmupCount ) {
+		cg.warmupCount = sec;
+		switch ( sec ) {
+			case 0:
+				trap_S_StartLocalSound( cgs.media.count1Sound, CHAN_ANNOUNCER );
+				break;
+			case 1:
+				trap_S_StartLocalSound( cgs.media.count2Sound, CHAN_ANNOUNCER );
+				break;
+			case 2:
+				trap_S_StartLocalSound( cgs.media.count3Sound, CHAN_ANNOUNCER );
+				break;
+			case 3:
+				trap_S_StartLocalSound( cgs.media.count4Sound, CHAN_ANNOUNCER );
+				break;
+			case 4:
+				trap_S_StartLocalSound( cgs.media.count5Sound, CHAN_ANNOUNCER );
+				break;
+			default:
+				break;
+		}
+	}
+
 	if ( cgs.gametype == GT_WOLF_STOPWATCH ) {
 		s = va( "%s %i", CG_TranslateString( "(WARMUP) Match begins in:" ), sec + 1 );
 	} else {

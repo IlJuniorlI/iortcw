@@ -877,6 +877,14 @@ static void CG_RegisterSounds( void ) {
 //	cgs.media.teleOutSound = trap_S_RegisterSound( "sound/world/teleout.wav" );
 //	cgs.media.respawnSound = trap_S_RegisterSound( "sound/items/respawn1.wav" );
 
+	cgs.media.countFightSound = trap_S_RegisterSound( "sound/match/fight.wav" );
+	cgs.media.countPrepareSound = trap_S_RegisterSound( "sound/match/prepare.wav" );
+	cgs.media.count1Sound = trap_S_RegisterSound( "sound/match/cn_1.wav" );
+	cgs.media.count2Sound = trap_S_RegisterSound( "sound/match/cn_2.wav" );
+	cgs.media.count3Sound = trap_S_RegisterSound( "sound/match/cn_3.wav" );
+	cgs.media.count4Sound = trap_S_RegisterSound( "sound/match/cn_4.wav" );
+	cgs.media.count5Sound = trap_S_RegisterSound( "sound/match/cn_5.wav" );
+
 	cgs.media.grenadebounce1 = trap_S_RegisterSound( "sound/weapons/grenade/hgrenb1a.wav" );
 	cgs.media.grenadebounce2 = trap_S_RegisterSound( "sound/weapons/grenade/hgrenb2a.wav" );
 
