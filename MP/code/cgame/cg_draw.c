@@ -2593,11 +2593,40 @@ static void CG_DrawSpectatorMessage( void ) {
 
 /*
 =================
-CG_DrawLimboMessage
+CG_SpawnTimer
 =================
 */
 
 #define INFOTEXT_STARTX 42
+
+void CG_SpawnTimer( int limboTime ) {
+	float color[4] = { 0, 1, 0, 1 };
+	const char *str;
+	int spawnTime;
+
+	if ( cg.warmup != 0 ) {
+		cg.spawnTimer = 0;
+		CG_Printf( "Can not set Enemy Spawn Timer during warmup.\n" );
+		return;
+	} 
+
+	if ( !cg.spawnTimerOffset ) {
+		cg.spawnTimerOffset = cg.time;
+	}
+
+	spawnTime = (int)( 1 + (float)( limboTime - ( ( cg.time - cg.spawnTimerOffset ) % limboTime ) ) * 0.001f );
+
+	str = va( CG_TranslateString( "%d" ), spawnTime );
+
+	CG_DrawSmallStringColor( INFOTEXT_STARTX, 86, str, color );
+
+}
+
+/*
+=================
+CG_DrawLimboMessage
+=================
+*/
 
 static void CG_DrawLimboMessage( void ) {
 	float color[4] = { 1, 1, 1, 1 };
@@ -2627,10 +2656,12 @@ static void CG_DrawLimboMessage( void ) {
 			case TEAM_RED:
 				str = va( CG_TranslateString( "%d" ),
 				  (int)( 1 + (float)( cg_redlimbotime.integer - ( cg.time % cg_redlimbotime.integer ) ) * 0.001f ) );
-				  break;
+				if ( cg.spawnTimer ) CG_SpawnTimer( cg_bluelimbotime.integer );
+				break;
 			default:
 				str = va( CG_TranslateString( "%d" ),
 				  (int)( 1 + (float)( cg_bluelimbotime.integer - ( cg.time % cg_bluelimbotime.integer ) ) * 0.001f ) );
+				if ( cg.spawnTimer ) CG_SpawnTimer( cg_redlimbotime.integer );
 		}
 	} else {
 		if ( cg_descriptiveText.integer ) {

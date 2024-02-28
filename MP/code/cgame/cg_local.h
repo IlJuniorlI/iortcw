@@ -882,6 +882,10 @@ typedef struct {
 	int warmup;
 	int warmupCount;
 
+	// spawn timer countdown
+	qboolean spawnTimer;
+	int spawnTimerOffset;
+
 	//==========================
 
 	int itemPickup;
