@@ -1298,6 +1298,9 @@ extern vmCvar_t g_dbgRevive;
 
 extern vmCvar_t g_localTeamPref;
 
+// Screen Shake percentage
+extern vmCvar_t g_screenShake; // 0-100
+
 void	trap_Print( const char *text );
 void	trap_Error( const char *text ) __attribute__((noreturn));
 int     trap_Milliseconds( void );

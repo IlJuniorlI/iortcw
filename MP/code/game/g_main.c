@@ -172,6 +172,9 @@ vmCvar_t	g_lightningDamage;
 vmCvar_t	sv_fps;
 //unlagged - server options
 
+// Screen Shake Percentage 
+vmCvar_t g_screenShake; // 0-100
+
 cvarTable_t gameCvarTable[] = {
 	// don't override the cheat state set by the system
 	{ &g_cheats, "sv_cheats", "", 0, qfalse },
@@ -315,7 +318,10 @@ cvarTable_t gameCvarTable[] = {
 	{ &sv_fps, "sv_fps", "20", CVAR_SYSTEMINFO | CVAR_ARCHIVE, 0, qfalse },
 	//unlagged - server options
 
-	{ &g_localTeamPref, "g_localTeamPref", "", 0, 0, qfalse }
+	{ &g_localTeamPref, "g_localTeamPref", "", 0, 0, qfalse },
+
+	{ &g_screenShake, "g_screenShake", "100", CVAR_SERVERINFO | CVAR_ARCHIVE, 0, qfalse }
+
 };
 
 static int gameCvarTableSize = ARRAY_LEN( gameCvarTable );

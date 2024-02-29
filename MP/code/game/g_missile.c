@@ -46,7 +46,7 @@ void M_think( gentity_t *ent );
 void Shaker_think( gentity_t *ent ) {
 	vec3_t vec;      // muzzlebounce, JPW NERVE no longer used
 	gentity_t   *player;
-	float len, radius = ent->splashDamage, bounceamt;
+	float len, radius = ent->splashDamage, bounceamt, percentage;
 	int i;
 	char cmd[64];       //DAJ
 /* JPW NERVE used for trigger_concussive_dust, currently not working
@@ -123,7 +123,8 @@ void Shaker_think( gentity_t *ent ) {
 		// NERVE - SMF - client side camera shake
 		//DAJ BUGFIX va() not doing %f's correctly
 		bounceamt = min( 1.0f, 1.0f - ( len / radius ) );
-		Com_sprintf( cmd, sizeof(cmd), "shake %.4f", bounceamt );   //DAJ
+		percentage = ( !g_screenShake.integer ) ? 1.0 : (float)g_screenShake.integer / 100.0;
+		Com_sprintf( cmd, sizeof(cmd), "shake %.4f", bounceamt * min( 1.0, percentage ) );   //DAJ
 		trap_SendServerCommand( player->s.clientNum, cmd );
 //DAJ BUGFIX		trap_SendServerCommand( player->s.clientNum, va( "shake %f", &bounceamt));
 	}
