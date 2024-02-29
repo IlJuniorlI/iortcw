@@ -694,6 +694,7 @@ void SVC_Info( netadr_t from ) {
 	Info_SetValueForKey( infostring, "gametype", va( "%i", sv_gametype->integer ) );
 	Info_SetValueForKey( infostring, "pure", va( "%i", sv_pure->integer ) );
 	Info_SetValueForKey( infostring, "g_needpass", va("%d", Cvar_VariableIntegerValue( "g_needpass" ) ) );
+	Info_SetValueForKey( infostring, "g_screenShake", va("%d", Cvar_VariableIntegerValue( "g_screenShake" ) ) );
 
 #ifdef USE_VOIP
 	if (sv_voipProtocol->string && *sv_voipProtocol->string) {
