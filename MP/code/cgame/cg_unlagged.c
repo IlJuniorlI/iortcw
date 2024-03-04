@@ -66,11 +66,11 @@ of setting the right origin and angles.
 void CG_PredictWeaponEffects( centity_t *cent ) {
 	vec3_t		muzzlePoint, forward, right, up;
 	entityState_t *ent = &cent->currentState;
-	qboolean bulletWeapon = qfalse;
 	float spread;
-	int bulletWeapons[] = { WP_COLT, WP_LUGER, WP_MP40, WP_STEN, WP_THOMPSON, WP_MAUSER, WP_GARAND, WP_SNIPERRIFLE, WP_SNOOPERSCOPE };
-	int length = sizeof(bulletWeapons) / sizeof(bulletWeapons[0]);
 	int i;
+	qboolean predictedWeapon = qfalse;
+	int predictedWeapons[] = { WP_COLT, WP_LUGER, WP_MP40, WP_STEN, WP_THOMPSON/*, WP_MAUSER, WP_GARAND, WP_SNIPERRIFLE, WP_SNOOPERSCOPE*/ };
+	int length = sizeof(predictedWeapons) / sizeof(predictedWeapons[0]);
 
 	// if the client isn't us, forget it
 	if ( cent->currentState.number != cg.predictedPlayerState.clientNum ) {
@@ -82,59 +82,15 @@ void CG_PredictWeaponEffects( centity_t *cent ) {
 		return;
 	}
 
-	// get the muzzle point
-	VectorCopy( cg.predictedPlayerState.origin, muzzlePoint );
-	muzzlePoint[2] += cg.predictedPlayerState.viewheight;
-
-	// get forward, right, and up
-	AngleVectors( cg.predictedPlayerState.viewangles, forward, right, up );
-	VectorMA( muzzlePoint, 14, forward, muzzlePoint );
-
 	for (i = 0; i < length; i++) {
-		if ( ent->weapon == bulletWeapons[i] ) {
-			bulletWeapon = qtrue;
-			spread = G_GetWeaponSpread( bulletWeapons[i] );
+		if ( ent->weapon == predictedWeapons[i] ) {
+			predictedWeapon = qtrue;
+			spread = G_GetWeaponSpread( predictedWeapons[i] );
 			break;
 		}
 	}
 
-	// was it a shotgun attack?
-	if ( ent->weapon == WP_VENOM ) {
-		// do we have it on for the shotgun?
-		if ( cg_delag.integer & 1 || cg_delag.integer & 4 ) {
-			int contents;
-			vec3_t endPoint, v;
-
-			// do everything like the server does
-
-			SnapVector( muzzlePoint );
-
-			VectorScale( forward, 4096, endPoint );
-			SnapVector( endPoint );
-
-			VectorSubtract( endPoint, muzzlePoint, v );
-			VectorNormalize( v );
-			VectorScale( v, 32, v );
-			VectorAdd( muzzlePoint, v, v );
-
-			if ( cgs.glconfig.hardwareType != GLHW_RAGEPRO ) {
-				// ragepro can't alpha fade, so don't even bother with smoke
-				vec3_t			up;
-
-				contents = trap_CM_PointContents( muzzlePoint, 0 );
-				if ( !( contents & CONTENTS_WATER ) ) {
-					VectorSet( up, 0, 0, 8 );
-					CG_SmokePuff( v, up, 32, 1, 1, 1, 0.33f, 900, cg.time, 0, LEF_PUFF_DONT_SCALE, cgs.media.shotgunSmokePuffShader );
-				}
-			}
-
-			// do the shotgun pellets
-			CG_VenomPattern( muzzlePoint, endPoint, cg.oldTime % 256, cg.predictedPlayerState.clientNum );
-			//Com_Printf( "Predicted shotgun pattern\n" );
-		}
-	}
-	// was it a machinegun attack?
-	else if ( bulletWeapon ) {
+	if ( predictedWeapon ) {
 		// do we have it on for the machinegun?
 		if ( cg_delag.integer & 1 || cg_delag.integer & 2 ) {
 			// the server will use this exact time (it'll be serverTime on that end)
@@ -148,12 +104,22 @@ void CG_PredictWeaponEffects( centity_t *cent ) {
 			int dist = 8192;
 			float aimSpreadScale;
 
+			// get the muzzle point
+			VectorCopy( cg.predictedPlayerState.origin, muzzlePoint );
+			muzzlePoint[2] += cg.predictedPlayerState.viewheight;
 
-			aimSpreadScale = (float)cg.nextSnap->ps.aimSpreadScale / 255.0;
-			aimSpreadScale += 0.15f; // (SA) just adding a temp /maximum/ accuracy for player (this will be re-visited in greater detail :)
+			// get forward, right, and up
+			AngleVectors( cg.predictedPlayerState.viewangles, forward, right, up );
+			VectorMA( muzzlePoint, 14, forward, muzzlePoint );
+
+
+			aimSpreadScale = (float)cg.snap->ps.aimSpreadScale / 255.0;
+			//aimSpreadScale = (float)cg.predictedPlayerState.aimSpreadScale / 255.0;
+			if ( aimSpreadScale < 0.15f ) aimSpreadScale = 0.15f; // (SA) just adding a temp /maximum/ accuracy for player (this will be re-visited in greater detail :)
+			
 			if ( ent->groundEntityNum == ENTITYNUM_NONE ) {
 				aimSpreadScale = 2.0f;
-			} else if ( aimSpreadScale > 1 || bulletWeapon == WP_MAUSER) {
+			} else if ( aimSpreadScale > 1 /*|| bulletWeapon == WP_MAUSER*/) {
 				aimSpreadScale = 1.0f;  // still cap at 1.0
 				}
 
@@ -170,11 +136,11 @@ void CG_PredictWeaponEffects( centity_t *cent ) {
 			r = Q_crandom(&seed) * spread;
 			u = Q_crandom(&seed) * spread;
 
-			if ( ent->weapon == WP_SNOOPERSCOPE || ent->weapon == WP_SNIPERRIFLE ) {
+			/*if ( ent->weapon == WP_SNOOPERSCOPE || ent->weapon == WP_SNIPERRIFLE ) {
 				// aim dir already accounted for sway of scoped weapons in CalcMuzzlePoints()
 				dist *= 2;
 				randSpread = qfalse;
-			}
+			}*/
 
 			VectorMA( muzzlePoint, dist, forward, endPoint );
 			if ( randSpread ) {
@@ -201,7 +167,7 @@ void CG_PredictWeaponEffects( centity_t *cent ) {
 
 			// do the bullet impact
 			CG_Bullet( tr.endpos, cg.predictedPlayerState.clientNum, tr.plane.normal, flesh, fleshEntityNum , qfalse, ent->otherEntityNum2, 0 );
-			//Com_Printf( "Predicted bullet\n" );
+			//Com_Printf( "CG: Predicted bullet\n" );
 		}
 	}
 }
