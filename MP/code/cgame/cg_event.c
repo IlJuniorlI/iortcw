@@ -2148,7 +2148,7 @@ void CG_EntityEvent( centity_t *cent, vec3_t position ) {
 				cgs.delagHitscan && (cg_delag.integer & 1 || cg_delag.integer & 2) &&
 				predictedWeapon ) {
 			// do nothing, because it was already predicted
-			Com_Printf("Ignoring bullet event\n");
+			//Com_Printf("Ignoring bullet event\n");
 		}
 		else {
 			// do the bullet, because it wasn't predicted
@@ -2175,7 +2175,7 @@ void CG_EntityEvent( centity_t *cent, vec3_t position ) {
 				cgs.delagHitscan && (cg_delag.integer & 1 || cg_delag.integer & 2) &&
 				predictedWeapon ) {
 			// do nothing, because it was already predicted
-			Com_Printf("Ignoring bullet event\n");
+			//Com_Printf("Ignoring bullet event\n");
 		}
 		else {
 			// do the bullet, because it wasn't predicted
