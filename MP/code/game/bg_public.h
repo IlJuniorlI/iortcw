@@ -364,6 +364,8 @@ typedef enum {
 typedef enum {
 	PERS_SCORE,                     // !!! MUST NOT CHANGE, SERVER AND GAME BOTH REFERENCE !!!
 	PERS_HITS,                      // total points damage inflicted so damage beeps can sound on change
+	PERS_HITS_HEAD,            		//hitsound headshot
+	PERS_HITS_BODY,            		//hitsound body
 	PERS_RANK,
 	PERS_TEAM,
 	PERS_SPAWN_COUNT,               // incremented every respawn

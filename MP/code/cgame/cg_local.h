@@ -1398,7 +1398,8 @@ typedef struct {
 	sfxHandle_t oneFragSound;
 
 	sfxHandle_t hitSound;
-	sfxHandle_t hitTeamSound;
+	sfxHandle_t hitSoundHead;
+	sfxHandle_t hitSoundTeam;
 	sfxHandle_t impressiveSound;
 	sfxHandle_t excellentSound;
 	sfxHandle_t deniedSound;

@@ -868,6 +868,9 @@ static void CG_RegisterSounds( void ) {
 	}
 // jpw
 	cgs.media.useNothingSound = trap_S_RegisterSound( "sound/items/use_nothing.wav" );
+	cgs.media.hitSound = trap_S_RegisterSound( "sound/hitsound/body.wav" );
+	cgs.media.hitSoundHead = trap_S_RegisterSound( "sound/hitsound/head.wav" );
+	cgs.media.hitSoundTeam = trap_S_RegisterSound( "sound/hitsound/team.wav" );
 	cgs.media.gibSound = trap_S_RegisterSound( "sound/player/gibsplt1.wav" );
 	//cgs.media.gibBounce1Sound = trap_S_RegisterSound( "sound/player/gibimp1.wav" );
 	cgs.media.gibBounce2Sound = trap_S_RegisterSound( "sound/player/gibimp2.wav" );

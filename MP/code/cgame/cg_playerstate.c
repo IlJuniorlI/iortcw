@@ -402,14 +402,16 @@ void CG_CheckLocalSounds( playerState_t *ps, playerState_t *ops ) {
 //	const char	*s;
 //	int	highScore;
 
-/* JPW NERVE pulled from wolf MP
+// JPW NERVE pulled from wolf MP
 	// hit changes
-	if ( ps->persistant[PERS_HITS] > ops->persistant[PERS_HITS] ) {
+	if ( ps->persistant[PERS_HITS_HEAD] > ops->persistant[PERS_HITS_HEAD] ) {
+		trap_S_StartLocalSound( cgs.media.hitSoundHead, CHAN_LOCAL_SOUND );
+	} else if ( ps->persistant[PERS_HITS_BODY] > ops->persistant[PERS_HITS_BODY] ) {
 		trap_S_StartLocalSound( cgs.media.hitSound, CHAN_LOCAL_SOUND );
-	} else if ( ps->persistant[PERS_HITS] < ops->persistant[PERS_HITS] ) {
-		trap_S_StartLocalSound( cgs.media.hitTeamSound, CHAN_LOCAL_SOUND );
+	} else if ( ps->persistant[PERS_HITS_BODY] < ops->persistant[PERS_HITS_BODY] ) {
+		trap_S_StartLocalSound( cgs.media.hitSoundTeam, CHAN_LOCAL_SOUND );
 	}
-*/
+
 
 	// health changes of more than -1 should make pain sounds
 	if ( ps->stats[STAT_HEALTH] < ops->stats[STAT_HEALTH] - 1 ) {

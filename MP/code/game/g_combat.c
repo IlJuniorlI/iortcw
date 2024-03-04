@@ -852,31 +852,6 @@ void G_ArmorDamage( gentity_t *targ ) {
 }
 
 /*
-==============
-G_Hitsound
-==============
-*/
-void G_Hitsound( gentity_t *self, gentity_t *attacker, qboolean tm, qboolean hs ) {
-
-	if ( !self || !attacker || !self->client || !attacker->client ) return;
-
-	if ( self->client == attacker->client ) return;	// self inflicted damage
-
-	if ( tm ) {
-		// team damage
-		G_AddEvent( self, EV_GENERAL_SOUND, G_SoundIndex( "sound/hitsound/team.wav" ) );
-	} else if ( attacker->s.number != ENTITYNUM_NONE && attacker->s.number != ENTITYNUM_WORLD ) {
-		if ( hs ) {
-			// headshot damage
-			G_AddEvent( self, EV_GENERAL_SOUND, G_SoundIndex( "sound/hitsound/head.wav" ) );
-		} else {
-			// nomral damage
-			G_AddEvent( self, EV_GENERAL_SOUND, G_SoundIndex( "sound/hitsound/body.wav" ) );
-		}
-	}
-}
-
-/*
 ============
 G_Damage
 
@@ -907,6 +882,7 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 	int asave;
 	int knockback;
 	qboolean headshot = qfalse;
+	qboolean skipHitsounds = qfalse;
 
 	if ( !targ->takedamage ) {
 		return;
@@ -1117,6 +1093,47 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 		targ->client->ps.eFlags |= EF_HEADSHOT;
 	}
 
+	// skip hitsounds for some mods
+	switch ( mod ) {
+		case MOD_FLAMETHROWER:
+		case MOD_DYNAMITE:
+		case MOD_DYNAMITE_SPLASH:
+		case MOD_GRENADE:
+		case MOD_AIRSTRIKE:
+		case MOD_UNKNOWN:
+			skipHitsounds = qtrue;
+			break;
+		case MOD_SUICIDE:
+			skipHitsounds = qtrue;
+			break;
+		case MOD_FALLING:
+			skipHitsounds = qtrue;
+			break;
+		case MOD_ARTY:
+			skipHitsounds = qtrue;
+			break;
+		default:
+			skipHitsounds = qfalse;
+			break;
+	}
+
+	//hitsounds
+	if ( !skipHitsounds && attacker->client && targ != attacker && targ->client ) {
+		if ( !headshot ) {
+			if ( OnSameTeam( targ, attacker ) ) {
+				attacker->client->ps.persistant[PERS_HITS_BODY] -= take;
+			} else {
+				attacker->client->ps.persistant[PERS_HITS_BODY] += take;
+			}
+		} else {
+			if ( OnSameTeam( targ, attacker ) ) {
+				attacker->client->ps.persistant[PERS_HITS_BODY] -= take;
+			} else {
+				attacker->client->ps.persistant[PERS_HITS_HEAD] += take;
+			}
+		}
+	}
+
 	if ( g_debugDamage.integer ) {
 		G_Printf( "client:%i health:%i damage:%i armor:%i\n", targ->s.number,
 				  targ->health, take, asave );
@@ -1151,9 +1168,6 @@ void G_Damage( gentity_t *targ, gentity_t *inflictor, gentity_t *attacker,
 		// set the last client who damaged the target
 		targ->client->lasthurt_client = attacker->s.number;
 		targ->client->lasthurt_mod = mod;
-
-		// play hitsound
-		if ( attacker->client ) G_Hitsound(targ, attacker, OnSameTeam( targ, attacker ), headshot);
 	}
 
 	// do the damage
