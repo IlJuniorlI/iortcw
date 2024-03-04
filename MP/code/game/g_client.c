@@ -1649,10 +1649,10 @@ char *ClientConnect( int clientNum, qboolean firstTime, qboolean isBot ) {
 	//unlagged - backward reconciliation #5
 	// announce it
 	if ( g_delagHitscan.integer ) {
-		trap_SendServerCommand( clientNum, "print \"This server is Unlagged: full lag compensation is ON!\n\"" );
+		trap_SendServerCommand( clientNum, "print \"Server is Unlagged: full lag compensation is ON!\n\"" );
 	}
 	else {
-		trap_SendServerCommand( clientNum, "print \"This server is Unlagged: full lag compensation is OFF!\n\"" );
+		trap_SendServerCommand( clientNum, "print \"Server is Unlagged: full lag compensation is OFF!\n\"" );
 	}
 	//unlagged - backward reconciliation #5
 
