@@ -1377,8 +1377,8 @@ void CG_EntityEvent( centity_t *cent, vec3_t position ) {
 	int clientNum;
 	clientInfo_t    *ci;
 	char	tempStr[MAX_QPATH];
+	
 	int i;
-
 	qboolean predictedWeapon = qfalse;
 	int predictedWeapons[] = { WP_COLT, WP_LUGER, WP_MP40, WP_STEN, WP_THOMPSON/*, WP_MAUSER, WP_GARAND, WP_SNIPERRIFLE, WP_SNOOPERSCOPE*/ };
 	int predictedWeaponslength = sizeof(predictedWeapons) / sizeof(predictedWeapons[0]);
