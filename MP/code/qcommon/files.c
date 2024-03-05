@@ -214,7 +214,8 @@ static const unsigned int binpak_checksums[] = {
 	2205235539u,	// OSP (0.83)
 	718455065u,	// OSP (0.9)
 	220076119u,	// Wild West (1.613)
-	2849242342u	// Wolftactics (1.0/1.01)
+	2849242342u,	// Wolftactics (1.0/1.01)
+	585944192u     // Unlagged 0.1
 };
 #endif
 
