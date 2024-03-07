@@ -43,7 +43,6 @@ extern vmCvar_t cg_gameType;
 #endif
 #ifdef GAMEDLL
 extern vmCvar_t g_gametype;
-extern vmCvar_t g_smoothClients;
 #endif
 // jpw
 
@@ -3911,25 +3910,11 @@ void BG_PlayerStateToEntityState( playerState_t *ps, entityState_t *s, qboolean 
 		SnapVector( s->apos.trBase );
 	}
 
-#ifdef GAMEDLL
-	if ( ps->movementDir > 128 && !g_smoothClients.integer ) {
-		s->angles2[YAW] = (float)ps->movementDir - 256;
-	} else {
-		s->angles2[YAW] = ps->movementDir;
-	}
-#endif
-#ifdef CGAMEDLL
 	if ( ps->movementDir > 128 ) {
 		s->angles2[YAW] = (float)ps->movementDir - 256;
 	} else {
 		s->angles2[YAW] = ps->movementDir;
 	}
-#endif
-	/*if ( ps->movementDir > 128 && !g_smoothClients.integer ) {
-		s->angles2[YAW] = (float)ps->movementDir - 256;
-	} else {
-		s->angles2[YAW] = ps->movementDir;
-	}*/
 
 	s->legsAnim     = ps->legsAnim;
 	s->torsoAnim    = ps->torsoAnim;
