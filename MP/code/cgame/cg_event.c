@@ -2137,7 +2137,7 @@ void CG_EntityEvent( centity_t *cent, vec3_t position ) {
 		DEBUGNAME( "EV_BULLET_HIT_WALL" );
 		//unlagged - attack prediction #2
 		// if the client is us, unlagged is on server-side, and we've got it client-side
-		for (i = 0; i < ARRAY_LEN ( predictedWeapons ); i++) {
+		for (i = 0; i < ARRAY_LEN( predictedWeapons ); i++) {
 			if ( cg.predictedPlayerState.weapon == predictedWeapons[i] ) {
 				predictedWeapon = qtrue;
 				break;
