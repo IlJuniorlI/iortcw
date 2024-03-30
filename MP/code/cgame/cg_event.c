@@ -1381,7 +1381,6 @@ void CG_EntityEvent( centity_t *cent, vec3_t position ) {
 	int i;
 	qboolean predictedWeapon = qfalse;
 	int predictedWeapons[] = { WP_COLT, WP_LUGER, WP_MP40, WP_STEN, WP_THOMPSON/*, WP_MAUSER, WP_GARAND, WP_SNIPERRIFLE, WP_SNOOPERSCOPE*/ };
-	int predictedWeaponslength = sizeof(predictedWeapons) / sizeof(predictedWeapons[0]);
 
 // JPW NERVE copied here for mg42 SFX event
 	vec3_t porg, gorg, norm;    // player/gun origin
@@ -2138,7 +2137,7 @@ void CG_EntityEvent( centity_t *cent, vec3_t position ) {
 		DEBUGNAME( "EV_BULLET_HIT_WALL" );
 		//unlagged - attack prediction #2
 		// if the client is us, unlagged is on server-side, and we've got it client-side
-		for (i = 0; i < predictedWeaponslength; i++) {
+		for (i = 0; i < ARRAY_LEN ( predictedWeapons ); i++) {
 			if ( cg.predictedPlayerState.weapon == predictedWeapons[i] ) {
 				predictedWeapon = qtrue;
 				break;
@@ -2165,7 +2164,7 @@ void CG_EntityEvent( centity_t *cent, vec3_t position ) {
 		DEBUGNAME( "EV_BULLET_HIT_FLESH" );
 		//unlagged - attack prediction #2
 		// if the client is us, unlagged is on server-side, and we've got it client-side
-		for (i = 0; i < predictedWeaponslength; i++) {
+		for (i = 0; i < ARRAY_LEN( predictedWeapons ); i++) {
 			if ( cg.predictedPlayerState.weapon == predictedWeapons[i] ) {
 				predictedWeapon = qtrue;
 				break;

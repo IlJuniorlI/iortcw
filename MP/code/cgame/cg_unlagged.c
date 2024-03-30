@@ -70,7 +70,6 @@ void CG_PredictWeaponEffects( centity_t *cent ) {
 	int i;
 	qboolean predictedWeapon = qfalse;
 	int predictedWeapons[] = { WP_COLT, WP_LUGER, WP_MP40, WP_STEN, WP_THOMPSON/*, WP_MAUSER, WP_GARAND, WP_SNIPERRIFLE, WP_SNOOPERSCOPE*/ };
-	int length = sizeof(predictedWeapons) / sizeof(predictedWeapons[0]);
 
 	// if the client isn't us, forget it
 	if ( cent->currentState.number != cg.predictedPlayerState.clientNum ) {
@@ -82,7 +81,7 @@ void CG_PredictWeaponEffects( centity_t *cent ) {
 		return;
 	}
 
-	for (i = 0; i < length; i++) {
+	for (i = 0; i < ARRAY_LEN( predictedWeapons ); i++) {
 		if ( ent->weapon == predictedWeapons[i] ) {
 			predictedWeapon = qtrue;
 			spread = G_GetWeaponSpread( predictedWeapons[i] );
@@ -113,8 +112,8 @@ void CG_PredictWeaponEffects( centity_t *cent ) {
 			VectorMA( muzzlePoint, 14, forward, muzzlePoint );
 
 
-			aimSpreadScale = (float)cg.snap->ps.aimSpreadScale / 255.0;
-			//aimSpreadScale = (float)cg.predictedPlayerState.aimSpreadScale / 255.0;
+			//aimSpreadScale = (float)cg.snap->ps.aimSpreadScale / 255.0;
+			aimSpreadScale = (float)cg.predictedPlayerState.aimSpreadScale / 255.0;
 			if ( aimSpreadScale < 0.15f ) aimSpreadScale = 0.15f; // (SA) just adding a temp /maximum/ accuracy for player (this will be re-visited in greater detail :)
 			
 			if ( ent->groundEntityNum == ENTITYNUM_NONE ) {
@@ -167,7 +166,7 @@ void CG_PredictWeaponEffects( centity_t *cent ) {
 
 			// do the bullet impact
 			CG_Bullet( tr.endpos, cg.predictedPlayerState.clientNum, tr.plane.normal, flesh, fleshEntityNum , qfalse, ent->otherEntityNum2, 0 );
-			//Com_Printf( "CG: Predicted bullet\n" );
+			//Com_Printf( "Predicted bullet\n" );
 		}
 	}
 }
