@@ -1206,11 +1206,11 @@ void ClientThink_real( gentity_t *ent ) {
 	// since that's the case, it makes no sense to store the extra info
 	// in the client's snapshot entity, so let's save a little bandwidth
 
-	if (g_smoothClients.integer) {
+	/*if (g_smoothClients.integer) {
 		BG_PlayerStateToEntityStateExtraPolate( &ent->client->ps, &ent->s, ent->client->ps.commandTime, qtrue );
-	} else {
+	} else {*/
 		BG_PlayerStateToEntityState( &ent->client->ps, &ent->s, qtrue );
-	}
+	//}
 //unlagged - smooth clients #2
 
 	if ( !( ent->client->ps.eFlags & EF_FIRING ) ) {
