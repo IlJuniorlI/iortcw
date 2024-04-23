@@ -3801,7 +3801,9 @@ static void CG_DrawCompass( void ) {
 					continue;
 				}
 
-				CG_DrawCompassIcon( basex, basey, basew, baseh, cg.snap->ps.origin, ent->pos.trBase, cgs.media.medicReviveShader );
+				if ( cgs.clientinfo[ent->clientNum].health <= 0 ) {
+					CG_DrawCompassIcon( basex, basey, basew, baseh, cg.snap->ps.origin, ent->pos.trBase, cgs.media.medicReviveShader );
+				}
 			}
 		}
 	}

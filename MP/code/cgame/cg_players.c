@@ -2135,7 +2135,7 @@ static void CG_PlayerSprites( centity_t *cent ) {
 	}
 
 	if ( cent->currentState.powerups & ( 1 << PW_INVULNERABLE )
-		 && ( ( cent->currentState.effect3Time + 3000 ) > cg.time ) ) {
+		 /*&& ( ( cent->currentState.effect3Time + 3000 ) > cg.time )*/ ) {
 		CG_PlayerFloatSprite( cent, cgs.media.spawnInvincibleShader, 56 );
 		return;
 	}
@@ -2148,7 +2148,8 @@ static void CG_PlayerSprites( centity_t *cent ) {
 		 && cent->currentState.number == cent->currentState.clientNum
 		 && cg.snap->ps.stats[ STAT_PLAYER_CLASS ] == PC_MEDIC
 		 && cg.snap->ps.stats[ STAT_HEALTH ] > 0
-		 && cg.snap->ps.persistant[PERS_TEAM] == team ) {
+		 && cg.snap->ps.persistant[PERS_TEAM] == team 
+		 && cgs.clientinfo[cent->currentState.clientNum].health <= 0) {
 
 		CG_PlayerFloatSprite( cent, cgs.media.medicReviveShader, 8 );
 		return;
