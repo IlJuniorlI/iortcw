@@ -112,9 +112,9 @@ void CG_PredictWeaponEffects( centity_t *cent ) {
 			VectorMA( muzzlePoint, 14, forward, muzzlePoint );
 
 
-			//aimSpreadScale = (float)cg.snap->ps.aimSpreadScale / 255.0;
-			aimSpreadScale = (float)cg.predictedPlayerState.aimSpreadScale / 255.0;
-			if ( aimSpreadScale < 0.15f ) aimSpreadScale = 0.15f; // (SA) just adding a temp /maximum/ accuracy for player (this will be re-visited in greater detail :)
+			aimSpreadScale = (float)cg.snap->ps.aimSpreadScale / 255.0;
+			//aimSpreadScale = (float)cg.predictedPlayerState.aimSpreadScale / 255.0;
+			if ( aimSpreadScale < 0.15f ) aimSpreadScale = 0.15f;
 			
 			if ( ent->groundEntityNum == ENTITYNUM_NONE ) {
 				aimSpreadScale = 2.0f;

@@ -481,7 +481,7 @@ static void CG_TouchTriggerPrediction( void ) {
 	}
 }
 
-/*
+
 //unlagged - optimized prediction
 #define ABS(x) ((x) < 0 ? (-(x)) : (x))
 
@@ -600,7 +600,7 @@ static int IsUnacceptableError( playerState_t *ps, playerState_t *pps ) {
 	return 0;
 }
 //unlagged - optimized prediction
-*/
+
 
 /*
 =================
@@ -636,12 +636,12 @@ void CG_PredictPlayerState( void ) {
 	usercmd_t oldestCmd;
 	usercmd_t latestCmd;
 	vec3_t deltaAngles = { 0 };
-	/*
+	
 	//unlagged - optimized prediction
 	int stateIndex, predictCmd;
 	int numPredicted = 0, numPlayedBack = 0; // debug code
 	//unlagged - optimized prediction
-	*/
+	
 
 	cg.hyperspace = qfalse; // will be set if touching a trigger_teleport
 
@@ -763,7 +763,7 @@ void CG_PredictPlayerState( void ) {
 		cg.predictedPlayerState.aiState = cg_animState.integer - 1;
 	}
 
-	/*
+	
 	//unlagged - optimized prediction
 	// Like the comments described above, a player's state is entirely
 	// re-predicted from the last valid snapshot every client frame, which
@@ -850,7 +850,7 @@ void CG_PredictPlayerState( void ) {
 		stateIndex = cg.stateHead;
 	}
 	//unlagged - optimized prediction
-	*/
+	
 
 	// run cmds
 	moved = qfalse;
@@ -962,9 +962,8 @@ void CG_PredictPlayerState( void ) {
 		cg_pmove.medicChargeTime = cg_medicChargeTime.integer;
 		// -NERVE - SMF
 		
-		Pmove( &cg_pmove );
-
-		/*
+		//Pmove( &cg_pmove );
+	
 		//unlagged - optimized prediction
 		// we check for cg_latentCmds because it'll mess up the optimization
 		if ( cg_optimizePrediction.integer && !cg_latentCmds.integer ) {
@@ -1010,7 +1009,6 @@ void CG_PredictPlayerState( void ) {
 			numPredicted++; // debug code
 		}
 		//unlagged - optimized prediction
-		*/
 
 		moved = qtrue;
 
