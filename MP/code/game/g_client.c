@@ -469,6 +469,10 @@ void limbo( gentity_t *ent, qboolean makeCorpse ) {
 
 		ent->client->ps.pm_flags |= PMF_LIMBO;
 		ent->client->ps.pm_flags |= PMF_FOLLOW;
+		if ( ent->client->ps.eFlags & EF_DEAD ) {
+			ent->client->ps.eFlags &= ~EF_DEAD;
+			ent->s.eFlags &= ~EF_DEAD;
+		}
 
 		if ( makeCorpse ) {
 			CopyToBodyQue( ent ); // make a nice looking corpse
@@ -2036,6 +2040,10 @@ void ClientSpawn( gentity_t *ent, qboolean revived ) {
 
 	// the respawned flag will be cleared after the attack and jump keys come up
 	client->ps.pm_flags |= PMF_RESPAWNED;
+	if ( client->ps.eFlags & EF_DEAD ) {
+		client->ps.eFlags &= ~EF_DEAD;
+		ent->s.eFlags &= ~EF_DEAD;
+	}
 
 	SetClientViewAngle( ent, spawn_angles );
 

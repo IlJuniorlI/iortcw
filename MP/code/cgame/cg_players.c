@@ -2149,7 +2149,7 @@ static void CG_PlayerSprites( centity_t *cent ) {
 		 && cg.snap->ps.stats[ STAT_PLAYER_CLASS ] == PC_MEDIC
 		 && cg.snap->ps.stats[ STAT_HEALTH ] > 0
 		 && cg.snap->ps.persistant[PERS_TEAM] == team 
-		 && cgs.clientinfo[cent->currentState.clientNum].health <= 0) {
+		 && cgs.clientinfo[cent->currentState.clientNum].health <= 0 ) {
 
 		CG_PlayerFloatSprite( cent, cgs.media.medicReviveShader, 8 );
 		return;
