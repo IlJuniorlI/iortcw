@@ -97,7 +97,7 @@ void CG_PredictWeaponEffects( centity_t *cent ) {
 			float r, u;
 			trace_t tr;
 			qboolean flesh;
-			int fleshEntityNum;
+			int entityNum;
 			vec3_t endPoint;
 			qboolean randSpread = qtrue;
 			int dist = 8192;
@@ -112,7 +112,11 @@ void CG_PredictWeaponEffects( centity_t *cent ) {
 			VectorMA( muzzlePoint, 14, forward, muzzlePoint );
 
 
-			aimSpreadScale = (float)cg.snap->ps.aimSpreadScale / 255.0;
+			if ( !cg.nextSnap ) {
+				aimSpreadScale = (float)cg.snap->ps.aimSpreadScale / 255.0;
+			} else {
+				aimSpreadScale = (float)cg.nextSnap->ps.aimSpreadScale / 255.0;
+			}
 			//aimSpreadScale = (float)cg.predictedPlayerState.aimSpreadScale / 255.0;
 			if ( aimSpreadScale < 0.15f ) aimSpreadScale = 0.15f;
 			
@@ -159,13 +163,14 @@ void CG_PredictWeaponEffects( centity_t *cent ) {
 			// do bullet impact
 			if ( tr.entityNum < MAX_CLIENTS ) {
 				flesh = qtrue;
-				fleshEntityNum = tr.entityNum;
+				entityNum = tr.entityNum;
 			} else {
 				flesh = qfalse;
+				entityNum = ENTITYNUM_WORLD;
 			}
 
 			// do the bullet impact
-			CG_Bullet( tr.endpos, cg.predictedPlayerState.clientNum, tr.plane.normal, flesh, fleshEntityNum , qfalse, ent->otherEntityNum2, 0 );
+			CG_Bullet( tr.endpos, cg.predictedPlayerState.clientNum, tr.plane.normal, flesh, entityNum , qfalse, ent->otherEntityNum2, 0 );
 			//Com_Printf( "Predicted bullet\n" );
 		}
 	}
