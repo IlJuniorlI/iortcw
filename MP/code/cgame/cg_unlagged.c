@@ -118,13 +118,20 @@ void CG_PredictWeaponEffects( centity_t *cent ) {
 				aimSpreadScale = (float)cg.nextSnap->ps.aimSpreadScale / 255.0;
 			}
 			//aimSpreadScale = (float)cg.predictedPlayerState.aimSpreadScale / 255.0;
-			if ( aimSpreadScale < 0.15f ) aimSpreadScale = 0.15f;
+
+			if ( aimSpreadScale == 0.0f ) {
+				aimSpreadScale = 0.15f;
+			} else {
+				aimSpreadScale += 0.15f;
+				}
 			
 			if ( ent->groundEntityNum == ENTITYNUM_NONE ) {
 				aimSpreadScale = 2.0f;
 			} else if ( aimSpreadScale > 1 /*|| bulletWeapon == WP_MAUSER*/) {
 				aimSpreadScale = 1.0f;  // still cap at 1.0
 				}
+
+			//Com_Printf( "CSS: %f\n", aimSpreadScale );
 
 			spread = spread * aimSpreadScale;
 

@@ -2399,6 +2399,8 @@ void FireWeapon( gentity_t *ent ) {
 		aimSpreadScale = 1.0;
 	}
 
+	//G_Printf( "GSS: %f\n", aimSpreadScale );
+
 // JPW NERVE -- EARLY OUT: if I'm in multiplayer and I have binocs, try to use artillery and then early return b4 switch statement
 	if ( g_gametype.integer != GT_SINGLE_PLAYER ) {
 		if ( ( ent->client->ps.eFlags & EF_ZOOMING ) && ( ent->client->ps.stats[STAT_KEYS] & ( 1 << INV_BINOCS ) ) &&
