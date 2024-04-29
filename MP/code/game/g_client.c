@@ -474,7 +474,7 @@ void limbo( gentity_t *ent, qboolean makeCorpse ) {
 			ent->s.eFlags &= ~EF_DEAD;
 		}
 
-		if ( makeCorpse ) {
+		if ( makeCorpse && !( contents & CONTENTS_NODROP ) ) {
 			CopyToBodyQue( ent ); // make a nice looking corpse
 		} else {
 			trap_UnlinkEntity( ent );
