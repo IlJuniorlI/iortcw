@@ -997,10 +997,6 @@ static void CG_DamageBlendBlob( void ) {
 		return;
 	}
 
-	if ( !cg_bloodFlash.integer ) {
-		return;
-	}
-
 	// ragePro systems can't fade blends, so don't obscure the screen
 	if ( cgs.glconfig.hardwareType == GLHW_RAGEPRO ) {
 		return;
@@ -1565,11 +1561,6 @@ Generates and draws a game scene and status information at the given time.
 void CG_DrawActiveFrame( int serverTime, stereoFrame_t stereoView, qboolean demoPlayback ) {
 	int inwater;
 	int mpSetup;                // NERVE - SMF
-
-	//unlagged - lag simulation #1
-	// adjust the clock to reflect latent snaps
-	cg.time -= cg_latentSnaps.integer * (1000 / sv_fps.integer);
-	//unlagged - lag simulation #1
 
 #ifdef DEBUGTIME_ENABLED
 	int dbgTime = trap_Milliseconds(),elapsed;

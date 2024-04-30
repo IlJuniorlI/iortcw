@@ -4515,10 +4515,7 @@ void CG_FireWeapon( centity_t *cent ) {
 			CG_MachineGunEjectBrass( cent );
 		}
 
-		if ( !cg_muzzleFlash.integer ) {
-			cent->muzzleFlashTime = 0;
-		}
-			else cent->muzzleFlashTime = cg.time;
+		cent->muzzleFlashTime = cg.time;
 
 		return;
 	}
@@ -4534,14 +4531,9 @@ void CG_FireWeapon( centity_t *cent ) {
 
 	cg.lastFiredWeapon = ent->weapon;   //----(SA)	added
 
-	if ( !cg_muzzleFlash.integer ) {
-		cent->muzzleFlashTime = 0;
-	}
-		else {
-			// mark the entity as muzzle flashing, so when it is added it will
-			// append the flash to the weapon model
-			cent->muzzleFlashTime = cg.time;
-		}
+	// mark the entity as muzzle flashing, so when it is added it will
+	// append the flash to the weapon model
+	cent->muzzleFlashTime = cg.time;
 
 	// RF, kick angles
 	if ( ent->number == cg.snap->ps.clientNum ) {
@@ -4636,10 +4628,6 @@ void CG_FireWeapon( centity_t *cent ) {
 			weap->ejectBrassFunc( cent );
 		}
 	} // jpw
-
-	//unlagged - attack prediction #1
-	CG_PredictWeaponEffects( cent );
-	//unlagged - attack prediction #1
 }
 
 
@@ -5759,10 +5747,7 @@ hit splashes (FIXME: random seed isn't synced anymore)
 		organized so that the pattern is more of a circle (with some degree of randomness)
 ================
 */
-//unlagged - attack prediction
-// made this non-static for access from cg_unlagged.c
-//static void CG_VenomPattern( vec3_t origin, vec3_t origin2, int otherEntNum ) {
-void CG_VenomPattern( vec3_t origin, vec3_t origin2, int seed, int otherEntNum ) {
+static void CG_VenomPattern( vec3_t origin, vec3_t origin2, int otherEntNum ) {
 	int i;
 	float r, u;
 	vec3_t end;
@@ -5776,12 +5761,8 @@ void CG_VenomPattern( vec3_t origin, vec3_t origin2, int seed, int otherEntNum )
 
 	// generate the "random" spread pattern
 	for ( i = 0 ; i < DEFAULT_VENOM_COUNT ; i++ ) {
-		//unlagged - attack prediction
-		//r = crandom() * DEFAULT_VENOM_SPREAD;
-		//u = crandom() * DEFAULT_VENOM_SPREAD;
-		r = Q_crandom( &seed ) * DEFAULT_VENOM_SPREAD;
-		u = Q_crandom( &seed ) * DEFAULT_VENOM_SPREAD;
-		//unlagged - attack prediction
+		r = crandom() * DEFAULT_VENOM_SPREAD;
+		u = crandom() * DEFAULT_VENOM_SPREAD;
 		VectorMA( origin, 8192, forward, end );
 		VectorMA( end, r, right, end );
 		VectorMA( end, u, up, end );
@@ -5819,10 +5800,7 @@ void CG_VenomFire( entityState_t *es, qboolean fullmode ) {
 		}
 	}
 	if ( fullmode ) {
-		//unlagged - attack prediction
-		//CG_VenomPattern( es->pos.trBase, es->origin2, es->otherEntityNum );
-		CG_VenomPattern( es->pos.trBase, es->origin2, es->eventParm, es->otherEntityNum );
-		//unlagged - attack prediction
+		CG_VenomPattern( es->pos.trBase, es->origin2, es->otherEntityNum );
 	}
 }
 
@@ -6002,7 +5980,6 @@ static qboolean CG_CalcMuzzlePoint( int entityNum, vec3_t muzzle ) {
 	return qtrue;
 }
 
-/*
 void SnapVectorTowards( vec3_t v, vec3_t to ) {
 	int i;
 
@@ -6014,7 +5991,7 @@ void SnapVectorTowards( vec3_t v, vec3_t to ) {
 		}
 	}
 }
-*/
+
 
 /*
 ======================
@@ -6049,10 +6026,8 @@ void CG_Bullet( vec3_t end, int sourceEntityNum, vec3_t normal, qboolean flesh, 
 		VectorCopy( cg_entities[cg.snap->ps.viewlocked_entNum].currentState.pos.trBase, muzzle );
 		VectorMA( muzzle, 16, up, muzzle );
 
-		//unlagged
 		r = Q_crandom( &seed ) * MG42_SPREAD_MP;
 		u = Q_crandom( &seed ) * MG42_SPREAD_MP;
-		//unlagged
 
 		VectorMA( muzzle, 8192, forward, end );
 		VectorMA( end, r, right, end );

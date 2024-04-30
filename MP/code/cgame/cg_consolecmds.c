@@ -513,14 +513,6 @@ static void CG_DumpLocation_f( void ) {
 			   (int) cg.snap->ps.origin[0], (int) cg.snap->ps.origin[1], (int) cg.snap->ps.origin[2] );
 }
 
-static void CG_SpawnTimer_f( void ) {
-	if ( cg.spawnTimer ) {
-		cg.spawnTimer = qfalse;
-		cg.spawnTimerOffset = 0;
-	} else {
-		cg.spawnTimer = qtrue;
-	}
-}
 
 typedef struct {
 	char    *cmd;
@@ -578,7 +570,6 @@ static consoleCommand_t commands[] = {
 
 	// Arnout
 	{ "dumploc", CG_DumpLocation_f },
-	{ "spawn_time", CG_SpawnTimer_f },
 };
 
 

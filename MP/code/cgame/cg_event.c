@@ -1377,10 +1377,6 @@ void CG_EntityEvent( centity_t *cent, vec3_t position ) {
 	int clientNum;
 	clientInfo_t    *ci;
 	char	tempStr[MAX_QPATH];
-	
-	int i;
-	qboolean predictedWeapon = qfalse;
-	int predictedWeapons[] = { WP_COLT, WP_LUGER, WP_MP40, WP_STEN, WP_THOMPSON/*, WP_MAUSER, WP_GARAND, WP_SNIPERRIFLE, WP_SNOOPERSCOPE*/ };
 
 // JPW NERVE copied here for mg42 SFX event
 	vec3_t porg, gorg, norm;    // player/gun origin
@@ -2048,21 +2044,7 @@ void CG_EntityEvent( centity_t *cent, vec3_t position ) {
 		break;
 
 	case EV_RAILTRAIL:
-		DEBUGNAME( "EV_RAILTRAIL" );
-		/*//unlagged - attack prediction #2
 		// ev_railtrail is now sent standalone rather than by a player entity
-		//CG_RailTrail( &cgs.clientinfo[ es->otherEntityNum2 ], es->origin2, es->pos.trBase, es->dmgFlags );   //----(SA)	added 'type' field
-		// if the client is us, unlagged is on server-side, and we've got it client-side
-		if ( es->clientNum == cg.predictedPlayerState.clientNum && 
-				cgs.delagHitscan && (cg_delag.integer & 1 || cg_delag.integer & 16) ) {
-			// do nothing, because it was already predicted
-			//Com_Printf("Ignoring rail trail event\n");
-		}
-		else {
-			// draw a rail trail, because it wasn't predicted
-			CG_RailTrail( &cgs.clientinfo[ es->otherEntityNum2 ], es->origin2, es->pos.trBase, es->dmgFlags );   //----(SA)	added 'type' field
-		}
-		//unlagged - attack prediction #2*/
 		CG_RailTrail( &cgs.clientinfo[ es->otherEntityNum2 ], es->origin2, es->pos.trBase, es->dmgFlags );   //----(SA)	added 'type' field
 		break;
 		//
@@ -2101,88 +2083,24 @@ void CG_EntityEvent( centity_t *cent, vec3_t position ) {
 
 	case EV_MG42BULLET_HIT_WALL:
 		DEBUGNAME( "EV_MG42BULLET_HIT_WALL" );
-		/*//unlagged - attack prediction #2
-		// if the client is us, unlagged is on server-side, and we've got it client-side
-		if ( es->clientNum == cg.predictedPlayerState.clientNum && 
-				cgs.delagHitscan && (cg_delag.integer & 1 || cg_delag.integer & 2) ) {
-			// do nothing, because it was already predicted
-			//Com_Printf("Ignoring bullet event\n");
-		}
-		else {
-			ByteToDir( es->eventParm, dir );
-			CG_Bullet( es->pos.trBase, es->otherEntityNum, dir, qfalse, ENTITYNUM_WORLD, qfalse, es->otherEntityNum2, es->effect1Time );
-		}
-		//unlagged - attack prediction #2*/
 		ByteToDir( es->eventParm, dir );
 		CG_Bullet( es->pos.trBase, es->otherEntityNum, dir, qfalse, ENTITYNUM_WORLD, qfalse, es->otherEntityNum2, es->effect1Time );
 		break;
 
 	case EV_MG42BULLET_HIT_FLESH:
 		DEBUGNAME( "EV_MG42BULLET_HIT_FLESH" );
-		/*//unlagged - attack prediction #2
-		// if the client is us, unlagged is on server-side, and we've got it client-side
-		if ( es->clientNum == cg.predictedPlayerState.clientNum && 
-				cgs.delagHitscan && (cg_delag.integer & 1 || cg_delag.integer & 2) ) {
-			// do nothing, because it was already predicted
-			//Com_Printf("Ignoring bullet event\n");
-		}
-		else {
-			CG_Bullet( es->pos.trBase, es->otherEntityNum, dir, qtrue, es->eventParm, qfalse, es->otherEntityNum2, es->effect1Time );
-		}
-		//unlagged - attack prediction #2*/
 		CG_Bullet( es->pos.trBase, es->otherEntityNum, dir, qtrue, es->eventParm, qfalse, es->otherEntityNum2, es->effect1Time );
 		break;
 
 	case EV_BULLET_HIT_WALL:
 		DEBUGNAME( "EV_BULLET_HIT_WALL" );
-		//unlagged - attack prediction #2
-		// if the client is us, unlagged is on server-side, and we've got it client-side
-		for (i = 0; i < ARRAY_LEN( predictedWeapons ); i++) {
-			if ( cg.predictedPlayerState.weapon == predictedWeapons[i] ) {
-				predictedWeapon = qtrue;
-				break;
-			}
-		}
-		if ( es->clientNum == cg.predictedPlayerState.clientNum && 
-				cgs.delagHitscan && (cg_delag.integer & 1 || cg_delag.integer & 2) &&
-				predictedWeapon ) {
-			// do nothing, because it was already predicted
-			//Com_Printf("Ignoring bullet event\n");
-		}
-		else {
-			// do the bullet, because it wasn't predicted
-			ByteToDir( es->eventParm, dir );
-			CG_Bullet( es->pos.trBase, es->otherEntityNum, dir, qfalse, ENTITYNUM_WORLD, qfalse, es->otherEntityNum2, 0 );
-			//Com_Printf("Non-predicted bullet\n");
-		}
-		//unlagged - attack prediction #2
-		//ByteToDir( es->eventParm, dir );
-		//CG_Bullet( es->pos.trBase, es->otherEntityNum, dir, qfalse, ENTITYNUM_WORLD, qfalse, es->otherEntityNum2, 0 );
+		ByteToDir( es->eventParm, dir );
+		CG_Bullet( es->pos.trBase, es->otherEntityNum, dir, qfalse, ENTITYNUM_WORLD, qfalse, es->otherEntityNum2, 0 );
 		break;
 
 	case EV_BULLET_HIT_FLESH:
 		DEBUGNAME( "EV_BULLET_HIT_FLESH" );
-		//unlagged - attack prediction #2
-		// if the client is us, unlagged is on server-side, and we've got it client-side
-		for (i = 0; i < ARRAY_LEN( predictedWeapons ); i++) {
-			if ( cg.predictedPlayerState.weapon == predictedWeapons[i] ) {
-				predictedWeapon = qtrue;
-				break;
-			}
-		}
-		if ( es->clientNum == cg.predictedPlayerState.clientNum && 
-				cgs.delagHitscan && (cg_delag.integer & 1 || cg_delag.integer & 2) &&
-				predictedWeapon ) {
-			// do nothing, because it was already predicted
-			//Com_Printf("Ignoring bullet event\n");
-		}
-		else {
-			// do the bullet, because it wasn't predicted
-			CG_Bullet( es->pos.trBase, es->otherEntityNum, dir, qtrue, es->eventParm, qfalse, es->otherEntityNum2, 0 );
-			//Com_Printf("Non-predicted bullet\n");
-		}
-		//unlagged - attack prediction #2
-		//CG_Bullet( es->pos.trBase, es->otherEntityNum, dir, qtrue, es->eventParm, qfalse, es->otherEntityNum2, 0 );
+		CG_Bullet( es->pos.trBase, es->otherEntityNum, dir, qtrue, es->eventParm, qfalse, es->otherEntityNum2, 0 );
 		break;
 
 	case EV_WOLFKICK_HIT_WALL:

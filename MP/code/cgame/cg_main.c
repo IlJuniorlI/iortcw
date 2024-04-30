@@ -151,8 +151,6 @@ vmCvar_t cg_brassTime;
 vmCvar_t cg_viewsize;
 vmCvar_t cg_letterbox;
 vmCvar_t cg_drawGun;
-vmCvar_t cg_bloodFlash;
-vmCvar_t cg_muzzleFlash;
 vmCvar_t cg_drawFPGun;
 vmCvar_t cg_drawGamemodels;
 vmCvar_t cg_cursorHints;    //----(SA)	added
@@ -205,10 +203,7 @@ vmCvar_t cg_enableBreath;
 vmCvar_t cg_autoactivate;
 vmCvar_t cg_blinktime;      //----(SA)	added
 
-//unlagged - smooth clients #2
-// this is done server-side now
-//vmCvar_t 	cg_smoothClients;
-//unlagged - smooth clients #2
+vmCvar_t cg_smoothClients;
 vmCvar_t pmove_fixed;
 vmCvar_t pmove_msec;
 
@@ -288,20 +283,6 @@ vmCvar_t cg_bluelimbotime;
 vmCvar_t cg_autoReload;
 vmCvar_t cg_antilag;
 
-//unlagged - client options
-vmCvar_t	cg_delag;
-vmCvar_t	cg_debugDelag;
-vmCvar_t	cg_drawBBox;
-vmCvar_t	cg_cmdTimeNudge;
-vmCvar_t	sv_fps;
-vmCvar_t	cg_projectileNudge;
-vmCvar_t	cg_optimizePrediction;
-vmCvar_t	cl_timeNudge;
-vmCvar_t	cg_latentSnaps;
-vmCvar_t	cg_latentCmds;
-vmCvar_t	cg_plOut;
-//unlagged - client options
-
 typedef struct {
 	vmCvar_t    *vmCvar;
 	char        *cvarName;
@@ -313,8 +294,6 @@ cvarTable_t cvarTable[] = {
 	{ &cg_ignore, "cg_ignore", "0", 0 },  // used for debugging
 	{ &cg_autoswitch, "cg_autoswitch", "2", CVAR_ARCHIVE },
 	{ &cg_drawGun, "cg_drawGun", "1", CVAR_ARCHIVE },
-	{ &cg_bloodFlash, "cg_bloodFlash", "1", CVAR_ARCHIVE },
-	{ &cg_muzzleFlash, "cg_muzzleFlash", "1", CVAR_ARCHIVE },
 	{ &cg_drawGamemodels, "cg_drawGamemodels", "1", CVAR_CHEAT },
 	{ &cg_drawFPGun, "cg_drawFPGun", "1", CVAR_ARCHIVE },
 	{ &cg_gun_frame, "cg_gun_frame", "0", CVAR_TEMP },
@@ -424,10 +403,7 @@ cvarTable_t cvarTable[] = {
 	{ &cg_timescaleFadeEnd, "cg_timescaleFadeEnd", "1", 0},
 	{ &cg_timescaleFadeSpeed, "cg_timescaleFadeSpeed", "0", 0},
 	{ &cg_timescale, "timescale", "1", 0},
-//unlagged - smooth clients #2
-// this is done server-side now
 //	{ &cg_smoothClients, "cg_smoothClients", "0", CVAR_USERINFO | CVAR_ARCHIVE},
-//unlagged - smooth clients #2
 	{ &cg_cameraMode, "com_cameraMode", "0", CVAR_CHEAT},
 
 	{ &pmove_fixed, "pmove_fixed", "0", CVAR_SYSTEMINFO},
@@ -508,22 +484,7 @@ cvarTable_t cvarTable[] = {
 
 	{ &cg_autoReload, "cg_autoReload", "1", CVAR_ARCHIVE },
 
-	{ &cg_antilag, "g_antilag", "0", 0 },
-
-	//unlagged - client options
-	{ &cg_delag, "cg_delag", "1", CVAR_ARCHIVE | CVAR_USERINFO },
-	{ &cg_debugDelag, "cg_debugDelag", "0", CVAR_USERINFO | CVAR_CHEAT },
-	{ &cg_drawBBox, "cg_drawBBox", "0", CVAR_CHEAT },
-	{ &cg_cmdTimeNudge, "cg_cmdTimeNudge", "0", CVAR_ARCHIVE | CVAR_USERINFO },
-	// this will be automagically copied from the server
-	{ &sv_fps, "sv_fps", "20", 0 },
-	{ &cg_projectileNudge, "cg_projectileNudge", "0", CVAR_ARCHIVE },
-	{ &cg_optimizePrediction, "cg_optimizePrediction", "1", CVAR_ARCHIVE },
-	{ &cl_timeNudge, "cl_timeNudge", "0", CVAR_ARCHIVE },
-	{ &cg_latentSnaps, "cg_latentSnaps", "0", CVAR_USERINFO | CVAR_CHEAT },
-	{ &cg_latentCmds, "cg_latentCmds", "0", CVAR_USERINFO | CVAR_CHEAT },
-	{ &cg_plOut, "cg_plOut", "0", CVAR_USERINFO | CVAR_CHEAT }
-//unlagged - client options
+	{ &cg_antilag, "g_antilag", "0", 0 }
 };
 
 static int  cvarTableSize = ARRAY_LEN( cvarTable );
@@ -586,33 +547,6 @@ void CG_UpdateCvars( void ) {
 	cvarTable_t *cv;
 
 	for ( i = 0, cv = cvarTable ; i < cvarTableSize ; i++, cv++ ) {
-		//unlagged - client options
-		// clamp the value between 0 and 999
-		// negative values would suck - people could conceivably shoot other
-		// players *long* after they had left the area, on purpose
-		if ( cv->vmCvar == &cg_cmdTimeNudge ) {
-			CG_Cvar_ClampInt( cv->cvarName, cv->vmCvar, 0, 999 );
-		}
-		// cl_timenudge less than -50 or greater than 50 doesn't actually
-		// do anything more than -50 or 50 (actually the numbers are probably
-		// closer to -30 and 30, but 50 is nice and round-ish)
-		// might as well not feed the myth, eh?
-		else if ( cv->vmCvar == &cl_timeNudge ) {
-			CG_Cvar_ClampInt( cv->cvarName, cv->vmCvar, -50, 50 );
-		}
-		// don't let this go too high - no point
-		else if ( cv->vmCvar == &cg_latentSnaps ) {
-			CG_Cvar_ClampInt( cv->cvarName, cv->vmCvar, 0, 10 );
-		}
-		// don't let this get too large
-		else if ( cv->vmCvar == &cg_latentCmds ) {
-			CG_Cvar_ClampInt( cv->cvarName, cv->vmCvar, 0, MAX_LATENT_CMDS - 1 );
-		}
-		// no more than 100% packet loss
-		else if ( cv->vmCvar == &cg_plOut ) {
-			CG_Cvar_ClampInt( cv->cvarName, cv->vmCvar, 0, 100 );
-		}
-		//unlagged - client options
 		trap_Cvar_Update( cv->vmCvar );
 	}
 
@@ -868,9 +802,6 @@ static void CG_RegisterSounds( void ) {
 	}
 // jpw
 	cgs.media.useNothingSound = trap_S_RegisterSound( "sound/items/use_nothing.wav" );
-	cgs.media.hitSound = trap_S_RegisterSound( "sound/hitsound/body.wav" );
-	cgs.media.hitSoundHead = trap_S_RegisterSound( "sound/hitsound/head.wav" );
-	cgs.media.hitSoundTeam = trap_S_RegisterSound( "sound/hitsound/team.wav" );
 	cgs.media.gibSound = trap_S_RegisterSound( "sound/player/gibsplt1.wav" );
 	//cgs.media.gibBounce1Sound = trap_S_RegisterSound( "sound/player/gibimp1.wav" );
 	cgs.media.gibBounce2Sound = trap_S_RegisterSound( "sound/player/gibimp2.wav" );
@@ -879,14 +810,6 @@ static void CG_RegisterSounds( void ) {
 //	cgs.media.teleInSound = trap_S_RegisterSound( "sound/world/telein.wav" );
 //	cgs.media.teleOutSound = trap_S_RegisterSound( "sound/world/teleout.wav" );
 //	cgs.media.respawnSound = trap_S_RegisterSound( "sound/items/respawn1.wav" );
-
-	cgs.media.countFightSound = trap_S_RegisterSound( "sound/match/fight.wav" );
-	cgs.media.countPrepareSound = trap_S_RegisterSound( "sound/match/prepare.wav" );
-	cgs.media.count1Sound = trap_S_RegisterSound( "sound/match/cn_1.wav" );
-	cgs.media.count2Sound = trap_S_RegisterSound( "sound/match/cn_2.wav" );
-	cgs.media.count3Sound = trap_S_RegisterSound( "sound/match/cn_3.wav" );
-	cgs.media.count4Sound = trap_S_RegisterSound( "sound/match/cn_4.wav" );
-	cgs.media.count5Sound = trap_S_RegisterSound( "sound/match/cn_5.wav" );
 
 	cgs.media.grenadebounce1 = trap_S_RegisterSound( "sound/weapons/grenade/hgrenb1a.wav" );
 	cgs.media.grenadebounce2 = trap_S_RegisterSound( "sound/weapons/grenade/hgrenb2a.wav" );

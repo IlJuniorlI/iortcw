@@ -1216,9 +1216,7 @@ static void CG_DrawLagometer( void ) {
 	int color;
 	float vscale;
 
-	//unlagged - misc
-	if ( !cg_lagometer.integer /* || cgs.localServer */) {
-	//unlagged - misc
+	if ( !cg_lagometer.integer || cgs.localServer ) {
 //	if(0) {
 		CG_DrawDisconnect();
 		return;
@@ -2593,37 +2591,6 @@ static void CG_DrawSpectatorMessage( void ) {
 
 /*
 =================
-CG_SpawnTimer
-=================
-*/
-
-void CG_SpawnTimer( int limboTime, int x, int y ) {
-	float color[4] = { 0, 1, 0, 1 };
-	const char *str;
-	int spawnTime;
-
-	if ( cg.warmup != 0 ) {
-		cg.spawnTimer = 0;
-		CG_Printf( "Can not set Enemy Spawn Timer during warmup.\n" );
-		return;
-	} 
-
-	if ( !cg.spawnTimerOffset ) {
-		cg.spawnTimerOffset = cg.time;
-	}
-
-	spawnTime = (int)( 1 + (float)( limboTime - ( ( cg.time - cg.spawnTimerOffset ) % limboTime ) ) * 0.001f );
-
-	str = va( CG_TranslateString( "%d" ), spawnTime );
-
-	CG_DrawSmallStringColor( x, y, str, color );
-
-	trap_R_SetColor( NULL );
-
-}
-
-/*
-=================
 CG_DrawLimboMessage
 =================
 */
@@ -2635,7 +2602,6 @@ static void CG_DrawLimboMessage( void ) {
 	const char *str;
 	playerState_t *ps;
 	//int w;
-	int y = 104;
 
 	if ( cgs.gametype < GT_WOLF ) {
 		return;
@@ -2643,52 +2609,36 @@ static void CG_DrawLimboMessage( void ) {
 
 	ps = &cg.snap->ps;
 
+	if ( ps->stats[STAT_HEALTH] > 0 ) {
+		return;
+	}
+
 	if ( cg.snap->ps.pm_flags & PMF_LIMBO || cgs.clientinfo[cg.clientNum].team == TEAM_SPECTATOR ) {
 		return;
 	}
 
 	color[3] *= cg_hudAlpha.value;
 
-	if ( ps->stats[STAT_HEALTH] > 0 ) {
-		// Spawn Timer
-		color[1] = 0;
-		color[2] = 0;
-		y = 68;
-		switch ( cgs.clientinfo[cg.snap->ps.clientNum].team ) {
-			case TEAM_RED:
-				str = va( CG_TranslateString( "%d" ),
-				  (int)( 1 + (float)( cg_redlimbotime.integer - ( cg.time % cg_redlimbotime.integer ) ) * 0.001f ) );
-				if ( cg.spawnTimer ) CG_SpawnTimer( cg_bluelimbotime.integer, INFOTEXT_STARTX, y + 18 );
-				break;
-			default:
-				str = va( CG_TranslateString( "%d" ),
-				  (int)( 1 + (float)( cg_bluelimbotime.integer - ( cg.time % cg_bluelimbotime.integer ) ) * 0.001f ) );
-				if ( cg.spawnTimer ) CG_SpawnTimer( cg_redlimbotime.integer, INFOTEXT_STARTX, y + 18 );
-		}
-	} else {
-		if ( cg_descriptiveText.integer ) {
-			str = CG_TranslateString( "You are wounded and waiting for a medic." );
-			CG_DrawSmallStringColor( INFOTEXT_STARTX, 68, str, color );
+	if ( cg_descriptiveText.integer ) {
+		str = CG_TranslateString( "You are wounded and waiting for a medic." );
+		CG_DrawSmallStringColor( INFOTEXT_STARTX, 68, str, color );
 
-			str = CG_TranslateString( "Press JUMP to go into reinforcement queue." );
-			CG_DrawSmallStringColor( INFOTEXT_STARTX, 86, str, color );
-		}
-
-		// JPW NERVE
-		if ( cg.snap->ps.persistant[PERS_RESPAWNS_LEFT] == 0 ) {
-			str = CG_TranslateString( "No more reinforcements this round." );
-		} else if ( cgs.clientinfo[cg.snap->ps.clientNum].team == TEAM_RED ) {
-			str = va( CG_TranslateString( "Reinforcements deploy in %d seconds." ),
-					(int)( 1 + (float)( cg_redlimbotime.integer - ( cg.time % cg_redlimbotime.integer ) ) * 0.001f ) );
-			if ( cg.spawnTimer ) CG_SpawnTimer( cg_bluelimbotime.integer, INFOTEXT_STARTX, y + 18 );
-		} else {
-			str = va( CG_TranslateString( "Reinforcements deploy in %d seconds." ),
-					(int)( 1 + (float)( cg_bluelimbotime.integer - ( cg.time % cg_bluelimbotime.integer ) ) * 0.001f ) );
-			if ( cg.spawnTimer ) CG_SpawnTimer( cg_redlimbotime.integer, INFOTEXT_STARTX, y + 18 );
-		}
+		str = CG_TranslateString( "Press JUMP to go into reinforcement queue." );
+		CG_DrawSmallStringColor( INFOTEXT_STARTX, 86, str, color );
 	}
 
-	CG_DrawSmallStringColor( INFOTEXT_STARTX, y, str, color );
+	// JPW NERVE
+	if ( cg.snap->ps.persistant[PERS_RESPAWNS_LEFT] == 0 ) {
+		str = CG_TranslateString( "No more reinforcements this round." );
+	} else if ( cgs.clientinfo[cg.snap->ps.clientNum].team == TEAM_RED ) {
+		str = va( CG_TranslateString( "Reinforcements deploy in %d seconds." ),
+				  (int)( 1 + (float)( cg_redlimbotime.integer - ( cg.time % cg_redlimbotime.integer ) ) * 0.001f ) );
+	} else {
+		str = va( CG_TranslateString( "Reinforcements deploy in %d seconds." ),
+				  (int)( 1 + (float)( cg_bluelimbotime.integer - ( cg.time % cg_bluelimbotime.integer ) ) * 0.001f ) );
+	}
+
+	CG_DrawSmallStringColor( INFOTEXT_STARTX, 104, str, color );
 	// jpw
 
 	trap_R_SetColor( NULL );
@@ -2728,11 +2678,9 @@ static qboolean CG_DrawFollow( void ) {
 		} else if ( cgs.clientinfo[cg.snap->ps.clientNum].team == TEAM_RED ) {
 			Com_sprintf( deploytime, sizeof(deploytime), CG_TranslateString( "Deploying in %d seconds" ),
 					 (int)( 1 + (float)( cg_redlimbotime.integer - ( cg.time % cg_redlimbotime.integer ) ) * 0.001f ) );
-			if ( cg.spawnTimer ) CG_SpawnTimer( cg_bluelimbotime.integer, INFOTEXT_STARTX, 86 + 18 );
 		} else {
 			Com_sprintf( deploytime, sizeof(deploytime), CG_TranslateString( "Deploying in %d seconds" ),
 					 (int)( 1 + (float)( cg_bluelimbotime.integer - ( cg.time % cg_bluelimbotime.integer ) ) * 0.001f ) );
-			if ( cg.spawnTimer ) CG_SpawnTimer( cg_redlimbotime.integer, INFOTEXT_STARTX, 86 + 18 );
 		}
 
 		CG_DrawStringExt( INFOTEXT_STARTX, 68, deploytime, color, qtrue, qfalse, SMALLCHAR_WIDTH, SMALLCHAR_HEIGHT, 80 );
@@ -2804,29 +2752,6 @@ static void CG_DrawWarmup( void ) {
 	sec = ( sec - cg.time ) / 1000;
 	if ( sec < 0 ) {
 		sec = 0;
-	}
-
-	if ( sec != cg.warmupCount ) {
-		cg.warmupCount = sec;
-		switch ( sec ) {
-			case 0:
-				trap_S_StartLocalSound( cgs.media.count1Sound, CHAN_ANNOUNCER );
-				break;
-			case 1:
-				trap_S_StartLocalSound( cgs.media.count2Sound, CHAN_ANNOUNCER );
-				break;
-			case 2:
-				trap_S_StartLocalSound( cgs.media.count3Sound, CHAN_ANNOUNCER );
-				break;
-			case 3:
-				trap_S_StartLocalSound( cgs.media.count4Sound, CHAN_ANNOUNCER );
-				break;
-			case 4:
-				trap_S_StartLocalSound( cgs.media.count5Sound, CHAN_ANNOUNCER );
-				break;
-			default:
-				break;
-		}
 	}
 
 	if ( cgs.gametype == GT_WOLF_STOPWATCH ) {
@@ -3029,11 +2954,7 @@ static void CG_DrawFlashDamage( void ) {
 		return;
 	}
 
-	if ( !cg_blood.integer ) {
-		return;
-	}
-
-	if ( !cg_bloodFlash.integer ) {
+	if (!cg_blood.integer) {
 		return;
 	}
 
@@ -3076,10 +2997,6 @@ static void CG_DrawFlashFire( void ) {
 		return;
 	}
 
-	if ( !cg_muzzleFlash.integer ) {
-		return;
-	}
-
 	if ( !cg.snap->ps.onFireStart ) {
 		cg.v_noFireTime = cg.time;
 		return;
@@ -3101,7 +3018,6 @@ static void CG_DrawFlashFire( void ) {
 		if ( alpha > max ) {
 			alpha = max;
 		}
-
 		col[0] = alpha;
 		col[1] = alpha;
 		col[2] = alpha;
@@ -3114,7 +3030,6 @@ static void CG_DrawFlashFire( void ) {
 		} else {
 			CG_DrawPic( -10, -10, 650, 490, cgs.media.viewFlashFire[( cg.time / 50 ) % 16] );
 		}
-
 		trap_R_SetColor( NULL );
 
 		CG_S_AddLoopingSound( cg.snap->ps.clientNum, cg.snap->ps.origin, vec3_origin, cgs.media.flameSound, (int)( 255.0 * alpha ) );
@@ -3801,9 +3716,7 @@ static void CG_DrawCompass( void ) {
 					continue;
 				}
 
-				if ( cgs.clientinfo[ent->clientNum].health <= 0 ) {
-					CG_DrawCompassIcon( basex, basey, basew, baseh, cg.snap->ps.origin, ent->pos.trBase, cgs.media.medicReviveShader );
-				}
+				CG_DrawCompassIcon( basex, basey, basew, baseh, cg.snap->ps.origin, ent->pos.trBase, cgs.media.medicReviveShader );
 			}
 		}
 	}
