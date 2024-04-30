@@ -43,7 +43,7 @@ If you have questions concerning this license or the applicable additional terms
 //#define PRE_RELEASE_DEMO
 
 //unlagged - lag simulation #2
-#define MAX_LATENT_CMDS 64
+//#define MAX_LATENT_CMDS 64
 //unlagged - lag simulation #2
 
 #ifdef STANDALONE

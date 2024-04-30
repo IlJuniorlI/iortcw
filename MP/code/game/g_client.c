@@ -1342,37 +1342,37 @@ void ClientUserinfoChanged( int clientNum ) {
 
 //unlagged - client options
 	// see if the player has opted out
-	s = Info_ValueForKey( userinfo, "cg_delag" );
-	if ( !atoi( s ) ) {
-		client->pers.delag = 0;
-	} else {
-		client->pers.delag = atoi( s );
-	}
+	//s = Info_ValueForKey( userinfo, "cg_delag" );
+	//if ( !atoi( s ) ) {
+		client->pers.delag = 1;
+	//} else {
+	//	client->pers.delag = atoi( s );
+	//}
 
 	// see if the player is nudging his shots
-	s = Info_ValueForKey( userinfo, "cg_cmdTimeNudge" );
-	client->pers.cmdTimeNudge = atoi( s );
+	//s = Info_ValueForKey( userinfo, "cg_cmdTimeNudge" );
+	client->pers.cmdTimeNudge = 0;
 
 	// see if the player wants to debug the backward reconciliation
-	s = Info_ValueForKey( userinfo, "cg_debugDelag" );
-	if ( !atoi( s ) ) {
+	//s = Info_ValueForKey( userinfo, "cg_debugDelag" );
+	//if ( !atoi( s ) ) {
 		client->pers.debugDelag = qfalse;
-	}
-	else {
-		client->pers.debugDelag = qtrue;
-	}
+	//}
+	//else {
+	//	client->pers.debugDelag = qtrue;
+	//}
 
 	// see if the player is simulating incoming latency
-	s = Info_ValueForKey( userinfo, "cg_latentSnaps" );
-	client->pers.latentSnaps = atoi( s );
+	//s = Info_ValueForKey( userinfo, "cg_latentSnaps" );
+	client->pers.latentSnaps = 0;
 
 	// see if the player is simulating outgoing latency
-	s = Info_ValueForKey( userinfo, "cg_latentCmds" );
-	client->pers.latentCmds = atoi( s );
+	//s = Info_ValueForKey( userinfo, "cg_latentCmds" );
+	client->pers.latentCmds = 0;
 
 	// see if the player is simulating outgoing packet loss
-	s = Info_ValueForKey( userinfo, "cg_plOut" );
-	client->pers.plOut = atoi( s );
+	//s = Info_ValueForKey( userinfo, "cg_plOut" );
+	client->pers.plOut = 0;
 //unlagged - client options
 
 	// check the auto activation
@@ -2036,10 +2036,6 @@ void ClientSpawn( gentity_t *ent, qboolean revived ) {
 
 	// the respawned flag will be cleared after the attack and jump keys come up
 	client->ps.pm_flags |= PMF_RESPAWNED;
-	if ( client->ps.eFlags & EF_DEAD ) {
-		client->ps.eFlags &= ~EF_DEAD;
-		ent->s.eFlags &= ~EF_DEAD;
-	}
 
 	SetClientViewAngle( ent, spawn_angles );
 

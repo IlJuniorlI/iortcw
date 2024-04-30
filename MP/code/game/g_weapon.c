@@ -1121,7 +1121,7 @@ into a wall.
 
 //unlagged - attack prediction #3
 // moved to q_shared.c
-/*
+
 void SnapVectorTowards( vec3_t v, vec3_t to ) {
 	int i;
 
@@ -1133,7 +1133,7 @@ void SnapVectorTowards( vec3_t v, vec3_t to ) {
 		}
 	}
 }
-*/
+
 //unlagged - attack prediction #3
 
 // JPW
@@ -1685,7 +1685,7 @@ void Bullet_Fire_Extended( gentity_t *source, gentity_t *attacker, vec3_t start,
 		//unlagged - attack prediction #2
 		// we need the client number to determine whether or not to
 		// suppress this event
-		tent->s.clientNum = attacker->s.clientNum;
+		//tent->s.clientNum = attacker->s.clientNum;
 		//unlagged - attack prediction #2
 		if ( LogAccuracyHit( traceEnt, attacker ) ) {
 			attacker->client->ps.persistant[PERS_ACCURACY_HITS]++;
@@ -1711,7 +1711,7 @@ void Bullet_Fire_Extended( gentity_t *source, gentity_t *attacker, vec3_t start,
 		//unlagged - attack prediction #2
 		// we need the client number to determine whether or not to
 		// suppress this event
-		tent->s.clientNum = attacker->s.clientNum;
+		//tent->s.clientNum = attacker->s.clientNum;
 		//unlagged - attack prediction #2
 	} else {
 		// Ridah, bullet impact should reflect off surface
@@ -1748,7 +1748,7 @@ void Bullet_Fire_Extended( gentity_t *source, gentity_t *attacker, vec3_t start,
 		//unlagged - attack prediction #2
 		// we need the client number to determine whether or not to
 		// suppress this event
-		tent->s.clientNum = attacker->s.clientNum;
+		//tent->s.clientNum = attacker->s.clientNum;
 		//unlagged - attack prediction #2
 
 		if ( traceEnt->flags & FL_DEFENSE_GUARD ) {

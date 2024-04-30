@@ -1609,7 +1609,7 @@ rather than blindly truncating.  This prevents it from truncating
 into a wall.
 ======================
 */
-void SnapVectorTowards( vec3_t v, vec3_t to ) {
+/*void SnapVectorTowards( vec3_t v, vec3_t to ) {
 	int		i;
 
 	for ( i = 0 ; i < 3 ; i++ ) {
@@ -1619,5 +1619,5 @@ void SnapVectorTowards( vec3_t v, vec3_t to ) {
 			v[i] = (int)v[i] + 1;
 		}
 	}
-}
+}*/
 //unlagged - attack prediction #3

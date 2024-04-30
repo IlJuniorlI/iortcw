@@ -475,6 +475,7 @@ typedef struct {
 
 //unlagged - true ping
 #define NUM_PING_SAMPLES 64
+#define MAX_LATENT_CMDS 64
 //unlagged - true ping
 
 // client data that stays across multiple respawns, but is cleared
@@ -1004,7 +1005,7 @@ qboolean LogAccuracyHit( gentity_t *target, gentity_t *attacker );
 void CalcMuzzlePoint( gentity_t *ent, int weapon, vec3_t forward, vec3_t right, vec3_t up, vec3_t muzzlePoint );
 //unlagged - attack prediction #3
 // we're making this available to both games
-//void SnapVectorTowards( vec3_t v, vec3_t to );
+void SnapVectorTowards( vec3_t v, vec3_t to );
 //unlagged - attack prediction #3
 trace_t *CheckMeleeAttack( gentity_t *ent, float dist, qboolean isTest );
 gentity_t *weapon_grenadelauncher_fire( gentity_t *ent, int grenadeWPID );
