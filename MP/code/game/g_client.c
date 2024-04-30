@@ -469,12 +469,8 @@ void limbo( gentity_t *ent, qboolean makeCorpse ) {
 
 		ent->client->ps.pm_flags |= PMF_LIMBO;
 		ent->client->ps.pm_flags |= PMF_FOLLOW;
-		if ( ent->client->ps.eFlags & EF_DEAD ) {
-			ent->client->ps.eFlags &= ~EF_DEAD;
-			ent->s.eFlags &= ~EF_DEAD;
-		}
 
-		if ( makeCorpse && !( contents & CONTENTS_NODROP ) ) {
+		if ( makeCorpse ) {
 			CopyToBodyQue( ent ); // make a nice looking corpse
 		} else {
 			trap_UnlinkEntity( ent );

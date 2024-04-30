@@ -473,13 +473,8 @@ void player_die( gentity_t *self, gentity_t *inflictor, gentity_t *attacker, int
 		}
 	}
 
-	if ( self->health > GIB_HEALTH ) {
-		self->takedamage = qtrue;   // can still be gibbed
-		self->r.contents = CONTENTS_CORPSE;
-	} else {
-		self->takedamage = qfalse;
-		self->r.contents = CONTENTS_NODROP;
-	}
+	self->takedamage = qtrue;   // can still be gibbed
+	self->r.contents = CONTENTS_CORPSE;
 
 	self->s.powerups = 0;
 // JPW NERVE -- only corpse in SP; in MP, need CONTENTS_BODY so medic can operate
