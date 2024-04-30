@@ -1561,15 +1561,15 @@ void Bullet_Endpos( gentity_t *ent, float spread, vec3_t *end ) {
 
 	//unlagged - attack prediction #2
 	// we have to use something now that the client knows in advance
-	int			seed = ent->client->attackTime % 256;
+	//int			seed = ent->client->attackTime % 256;
 	//unlagged - attack prediction #2
 
 	//unlagged - attack prediction #2
 	// this has to match what's on the client
-	//r = crandom() * spread;
-	//u = crandom() * spread;
-	r = Q_crandom(&seed) * spread;
-	u = Q_crandom(&seed) * spread;
+	r = crandom() * spread;
+	u = crandom() * spread;
+	//r = Q_crandom(&seed) * spread;
+	//u = Q_crandom(&seed) * spread;
 	//unlagged - attack prediction #2
 
 	// Ridah, if this is an AI shooting, apply their accuracy
@@ -1578,10 +1578,10 @@ void Bullet_Endpos( gentity_t *ent, float spread, vec3_t *end ) {
 		accuracy = ( 1.0 - AICast_GetAccuracy( ent->s.number ) ) * AICAST_AIM_SPREAD;
 		//unlagged - attack prediction #2
 		// this has to match what's on the client
-		//r += crandom() * accuracy;
-		//u += crandom() * ( accuracy * 1.25 );
-		r += Q_crandom(&seed) * accuracy;
-		u += Q_crandom(&seed) * ( accuracy * 1.25 );
+		r += crandom() * accuracy;
+		u += crandom() * ( accuracy * 1.25 );
+		//r += Q_crandom(&seed) * accuracy;
+		//u += Q_crandom(&seed) * ( accuracy * 1.25 );
 		//unlagged - attack prediction #2
 	} else {
 		if ( ent->s.weapon == WP_SNOOPERSCOPE || ent->s.weapon == WP_SNIPERRIFLE ) {
@@ -1988,10 +1988,10 @@ void VenomPattern( vec3_t origin, vec3_t origin2, int seed, gentity_t *ent ) {
 	// generate the "random" spread pattern
 	for ( i = 0 ; i < DEFAULT_VENOM_COUNT ; i++ ) {
 		//unlagged - backward reconciliation #2
-		//r = crandom() * DEFAULT_VENOM_SPREAD;
-		//u = crandom() * DEFAULT_VENOM_SPREAD;
-		r = Q_crandom( &seed ) * DEFAULT_VENOM_SPREAD;
-		u = Q_crandom( &seed ) * DEFAULT_VENOM_SPREAD;
+		r = crandom() * DEFAULT_VENOM_SPREAD;
+		u = crandom() * DEFAULT_VENOM_SPREAD;
+		//r = Q_crandom( &seed ) * DEFAULT_VENOM_SPREAD;
+		//u = Q_crandom( &seed ) * DEFAULT_VENOM_SPREAD;
 		//unlagged - backward reconciliation #2
 		VectorMA( origin, 8192, forward, end );
 		VectorMA( end, r, right, end );
@@ -2071,8 +2071,8 @@ void weapon_venom_fire( gentity_t *ent, qboolean fullmode, float aimSpreadScale 
 	SnapVector( tent->s.origin2 );
 	//unlagged - attack prediction #2
 	// this has to be something the client can predict now
-	//tent->s.eventParm = rand() & 255;		// seed for spread pattern
-	tent->s.eventParm = ent->client->attackTime % 256; // seed for spread pattern
+	tent->s.eventParm = rand() & 255;		// seed for spread pattern
+	//tent->s.eventParm = ent->client->attackTime % 256; // seed for spread pattern
 	//unlagged - attack prediction #2
 	tent->s.otherEntityNum = ent->s.number;
 
